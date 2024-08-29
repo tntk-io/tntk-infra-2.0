@@ -46,7 +46,6 @@ module "eks" {
       instance_types               = ["t3.medium"]
       capacity_type                = "SPOT"
       subnet_ids                   = module.vpc.private_subnets
-      iam_role_additional_policies = { AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess" }
     }
   }
 }
