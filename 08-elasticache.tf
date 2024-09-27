@@ -29,3 +29,10 @@ module "elasticache" {
     Name = "${var.tag_env}-redis"
   }
 }
+
+resource "aws_ssm_parameter" "save_redis_endpoint_to_ssm" {
+  name        = "/${var.tag_env}/redis/endpoint"
+  description = "Redis Endpoint"
+  type        = "SecureString"
+  value       = module.elasticache.cluster_cache_nodes[0].address
+}

@@ -23,7 +23,7 @@ module "rds" {
 
 
   db_subnet_group_name   = module.vpc.database_subnet_group
-  vpc_security_group_ids = [module.security_group.security_group_id]
+  vpc_security_group_ids = [module.rds_security_group.security_group_id]
 
   tags = {
     Name = "${var.tag_env}-rds"
@@ -88,7 +88,7 @@ resource "aws_ssm_parameter" "save_rds_db_name_to_ssm" {
   name        = "/${var.tag_env}/rds/db_name"
   description = "RDS DB name"
   type        = "SecureString"
-  value       = random_password.rds_db_name.result
+  value       = module.rds.db_instance_name
 }
 
 # saving rds endpoint into ssm
@@ -104,7 +104,11 @@ resource "aws_ssm_parameter" "save_rds_password_to_ssm" {
   name        = "/${var.tag_env}/rds/password"
   description = "RDS password"
   type        = "SecureString"
-  value       = random_password.rds_password.result
+  value       = jsondecode(data.aws_secretsmanager_secret_version.rds_password.secret_string).password
+}
+
+data "aws_secretsmanager_secret_version" "rds_password" {
+  secret_id = module.rds.db_instance_master_user_secret_arn
 }
 
 # saving rds admin_username into ssm

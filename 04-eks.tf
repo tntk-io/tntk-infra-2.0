@@ -46,8 +46,35 @@ module "eks" {
       instance_types               = ["t3.medium"]
       capacity_type                = "SPOT"
       subnet_ids                   = module.vpc.private_subnets
+      iam_role_additional_policies = {
+        ECRaccess = "${aws_iam_policy.ecr_policy.arn}" 
+      }
     }
   }
+}
+
+
+resource "aws_iam_policy" "ecr_policy" {
+  name        = "ECRPushPolicy"
+  description = "Policy to allow ECR operations and access to Parameter Store"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:CompleteLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:InitiateLayerUpload",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:BatchGetImage"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 data "aws_eks_cluster" "cluster" {
@@ -63,3 +90,26 @@ data "aws_eks_cluster_auth" "cluster" {
     module.eks.cluster_name
   ]
 }
+
+resource "kubernetes_config_map" "bookapp_configmap" {
+  metadata {
+    name      = "bookapp-configmap"
+    namespace = "application"
+  }
+
+  data = {
+    ".env" = "${templatefile("application-configmap/configmap.yaml", {
+      rds_username = "${random_password.rds_admin_username.result}",
+      rds_password = "${jsondecode(data.aws_secretsmanager_secret_version.rds_password.secret_string).password}",
+      rds_db_name = "${random_password.rds_db_name.result}",
+      rds_endpoint = "${module.rds.db_instance_endpoint}",
+      redis_host = "${module.elasticache.cluster_cache_nodes[0].address}",
+      rabbitmq_host = "amqps://b-8dace556-4424-4896-8493-8fbda783b3be.mq.us-east-1.amazonaws.com:5671",
+      rabbitmq_username = "${random_password.rabbitmq_username.result}",
+      rabbitmq_password = "${random_password.rabbitmq_password.result}"
+    })}"
+
+  }
+  depends_on = [ module.eks ]
+}
+

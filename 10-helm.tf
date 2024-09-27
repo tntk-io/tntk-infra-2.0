@@ -178,26 +178,20 @@ resource "helm_release" "argocd-apps" {
   name       = "argocd-apps"
   chart      = "argocd-apps"
   namespace  = "argocd"
-  version    = "2.0.0"
+  version    = "2.0.1"
   repository = "https://argoproj.github.io/argo-helm"
   timeout    = 300
-
-  set {
-    name  = "applications[0].source.repoURL"
-    value = "https://github.com/${var.cd_project_repo}"
-    type  = "string"
-  }
-  set {
-    name  = "applications[0].source.targetRevision"
-    value = var.tag_env
-    type  = "string"
-  }
   values = [
-    "${file("helm-chart-values/argo-cd-apps-values.yaml")}"
+    "${templatefile("helm-chart-values/argo-cd-apps-values.yaml",{
+    repoURL = "https://github.com/${var.cd_project_repo}",
+    targetRevision = "${var.tag_env}"
+    }
+    )}"
   ]
 
-
+  depends_on = [helm_release.argocd, module.eks]
 }
+
 
 # DataDog Helm Chart
 resource "helm_release" "datadog" {
