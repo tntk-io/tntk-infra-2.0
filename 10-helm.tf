@@ -2,243 +2,34 @@
 ###            HELM               ###
 #####################################
 
-resource "helm_release" "crd-helm-chart" {
-  name             = "crd-helm-chart"
-  chart            = "./crd-helm-chart"
-  namespace        = "crd-helm-chart"
-  create_namespace = "true"
-  set {
-    name  = "tag_env"
-    value = var.tag_env
-    type  = "string"
-  }
-  set {
-    name  = "projectrepo"
-    value = var.ci_project_repo
-    type  = "string"
-  }
-  set {
-    name  = "aws_account_id"
-    value = data.aws_caller_identity.current.account_id
-    type  = "string"
-  }
-  set {
-    name  = "aws_region"
-    value = var.aws_region
-    type  = "string"
-  }
-
-  depends_on = [helm_release.actions-runner-controller, module.eks]
-}
-
-# helm chart cert-manager requirements for actions runner contoller
-resource "helm_release" "cert-manager" {
-  name             = "cert-manager"
-  chart            = "cert-manager"
-  repository       = "https://charts.jetstack.io"
-  namespace        = "cert-manager"
-  version          = "1.14.1"
-  create_namespace = "true"
-  set {
-    name  = "installCRDs"
-    value = "true"
-    type  = "string"
-  }
-
-  depends_on = [module.eks]
-}
-
-# Github Actions Runner Helm Chart
 resource "helm_release" "actions-runner-controller" {
-  name             = "actions-runner-controller"
-  chart            = "actions-runner-controller"
-  repository       = "https://actions-runner-controller.github.io/actions-runner-controller"
+  name             = "gha-runner-scale-set-controller"
+  chart            = "gha-runner-scale-set-controller"
+  repository       = "https://actions-runner-controller.github.io/gha-runner-scale-set-controller"
   namespace        = "actions-runner-system"
-  version          = "0.23.7"
+  version          = "0.27.6"
   create_namespace = "true"
 
-  set {
-    name  = "authSecret.create"
-    value = "true"
-    type  = "string"
-  }
-  set {
-    name  = "authSecret.github_token"
-    value = var.registrationToken
-    type  = "string"
-  }
-
-  depends_on = [helm_release.cert-manager, module.eks]
-}
-
-# Nginx Ingress Controller Helm Chart
-resource "helm_release" "ingress-nginx" {
-  name             = "ingress-nginx"
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  version          = "4.9.1"
-  namespace        = "ingress-nginx"
-  create_namespace = "true"
-  timeout          = 600
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-connection-idle-timeout"
-    value = "60"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
-    value = "true"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
-    value = aws_acm_certificate.eks_domain_cert.arn
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"
-    value = "https"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-negotiation-policy"
-    value = "ELBSecurityPolicy-TLS-1-2-2017-01"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
-    value = "nlb"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.targetPorts.http"
-    value = "http"
-    type  = "string"
-  }
-  set {
-    name  = "controller.service.targetPorts.https"
-    value = "http"
-    type  = "string"
-  }
-  set {
-    name  = "controller.admissionWebhooks.enabled"
-    value = "false"
-  }
-
-  depends_on = [module.eks]
-}
-
-# ArgoCD Helm Chart
-resource "helm_release" "argocd" {
-  name             = "argocd"
-  create_namespace = "true"
-  chart            = "argo-cd"
-  namespace        = "argocd"
-  version          = "7.4.4"
-  repository       = "https://argoproj.github.io/argo-helm"
-  timeout          = 300
-
-  set {
-    name  = "server.extraArgs"
-    value = "{--insecure}"
-  }
-
-  set {
-    name  = "server.ingress.enabled"
-    value = "true"
-    type  = "string"
-  }
-
-  set {
-    name  = "server.ingress.annotations.kubernetes\\.io/ingress\\.class"
-    value = "nginx"
-    type  = "string"
-  }
-  set {
-    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/force-ssl-redirect"
-    value = "false"
-    type  = "string"
-  }
-  set {
-    name  = "server.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/backend-protocol"
-    value = "HTTP"
-    type  = "string"
-  }
-  set {
-    name  = "server.ingress.hosts"
-    value = "{argo.${var.tag_env}.${var.base_domain}}"
-    type  = "string"
-  }
-
-
-}
-
-# argocd-apps helm chart to create application in argocd
-resource "helm_release" "argocd-apps" {
-  name       = "argocd-apps"
-  chart      = "argocd-apps"
-  namespace  = "argocd"
-  version    = "2.0.1"
-  repository = "https://argoproj.github.io/argo-helm"
-  timeout    = 300
-  values = [
-    "${templatefile("helm-chart-values/argo-cd-apps-values.yaml",{
-    repoURL = "https://github.com/${var.cd_project_repo}",
-    targetRevision = "${var.tag_env}"
-    }
-    )}"
-  ]
-
-  depends_on = [helm_release.argocd, module.eks]
+  depends_on = [helm_release.cert-manager, module.eks_blueprints]
 }
 
 
-# DataDog Helm Chart
-resource "helm_release" "datadog" {
-  name             = "datadog"
-  repository       = "https://helm.datadoghq.com"
-  chart            = "datadog"
-  namespace        = "datadog"
-  version          = "3.53.2"
-  create_namespace = "true"
-  timeout          = 300
-  set {
-    name  = "datadog.apiKey"
-    value = var.datadog_api_key
-  }
-  set {
-    name  = "datadog.appkey"
-    value = var.datadog_application_key
-  }
-  set {
-    name  = "datadog.clusterName"
-    value = module.eks.cluster_name
-  }
-  set {
-    name  = "datadog.site"
-    value = var.datadog_region
-  }
-  set {
-    name  = "datadog.dd_url"
-    value = "https://${var.datadog_region}"
-  }
-  set {
-    name  = "datadog.logs.enabled"
-    value = "true"
-  }
-  set {
-    name  = "datadog.logs.containerCollectAll"
-    value = "true"
-  }
+resource "helm_release" "actions-runner-controller" {
+  name             = "gha-runner-scale-set"
+  chart            = "gha-runner-scale-set"
+  repository       = "https://actions-runner-controller.github.io/gha-runner-scale-set"
+  namespace        = "actions-runner-system"
+  version          = "0.27.6"
 
-  depends_on = [module.eks]
+ set {
+   name = "githubConfigUrl"
+   value = "https://github.com/tntk-io"
+ }
+ 
+ set {
+   name = "githubConfigSecret.github_token"
+   value = var.github_token
+ }
+  depends_on = [helm_release.cert-manager, module.eks_blueprints, helm_release.actions-runner-controller]
 }
 
-data "kubernetes_service" "ingress_gateway" {
-  metadata {
-    name      = "ingress-nginx-controller"
-    namespace = helm_release.ingress-nginx.namespace
-  }
-
-  depends_on = [helm_release.ingress-nginx, module.eks]
-}

@@ -1,6 +1,6 @@
-#####################################
-###          DATADOG              ###
-#####################################
+# #####################################
+# ###          DATADOG              ###
+# #####################################
 
 resource "aws_cloudformation_stack" "DatadogIntegration" {
   name         = "DatadogIntegration"

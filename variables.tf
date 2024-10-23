@@ -13,11 +13,6 @@ variable "tag_env" {
   description = "tag environment for out all resources"
 }
 
-variable "id_rsa" {
-  type        = string
-  description = "Public ssh key for ec2 instances"
-}
-
 variable "datadog_api_key" {
   type        = string
   description = "datadog api key"
@@ -38,7 +33,7 @@ variable "datadog_region" {
 #####################################
 
 # required github token
-variable "registrationToken" {
+variable "github_token" {
   type        = string
   description = "registration token to register github runner for CI"
 }
@@ -51,4 +46,35 @@ variable "ci_project_repo" {
 variable "cd_project_repo" {
   type        = string
   description = "argo CD project repo"
+}
+
+variable "argocd_repos" {
+  type = map(any)
+  description = "ArgoCD repositories."
+}
+
+variable "argocd_apps" {
+  type = map(any)
+  description = "ArgoCD applications to be created."
+
+  ### Example of Usage
+    # argocd_apps = {
+    #   tntk-books = {
+    #     name      = "tntk-books"
+    #     namespace = "argocd"
+    #     destination = {
+    #       server    = "https://kubernetes.default.svc"
+    #       namespace = "default"
+    #     }
+    #     source = {
+    #       repo_url        = "https://github.com/tntk-io/tntk-k8s-manifests"
+    #       chart           = "charts/tntk-books"
+    #       target_revision = "HEAD"
+    #     }
+    #     helm = {
+    #       release_name     = "tntk-books"
+    #       value_files_path = ["values.yaml"]
+    #     }
+    #   }
+    # }
 }

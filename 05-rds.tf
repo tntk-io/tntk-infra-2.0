@@ -108,7 +108,7 @@ resource "aws_ssm_parameter" "save_rds_password_to_ssm" {
 }
 
 data "aws_secretsmanager_secret_version" "rds_password" {
-  secret_id = module.rds.db_instance_master_user_secret_arn
+  secret_id = module.rds.db_instance_master_user_secret_arn  # Replace with your secret ARN
 }
 
 # saving rds admin_username into ssm

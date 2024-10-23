@@ -1,6 +1,6 @@
-#####################################
-###          RABBITMQ             ###
-#####################################
+# #####################################
+# ###          RABBITMQ             ###
+# #####################################
 
 
 resource "aws_mq_broker" "rabbitmq" {
@@ -19,9 +19,9 @@ resource "aws_mq_broker" "rabbitmq" {
   }
 }
 
-###########################
-# Supporting Resources
-###########################
+# ###########################
+# # Supporting Resources
+# ###########################
 
 module "rabbitmq_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
@@ -83,5 +83,5 @@ resource "aws_ssm_parameter" "save_rabbitmq_endpoint_to_ssm" {
   name        = "/${var.tag_env}/rabbitmq/endpoint"
   description = "rabbitmq endpoint"
   type        = "SecureString"
-  value       = "amqps://${aws_mq_broker.rabbitmq.id}.mq.${data.aws_region.current}.amazonaws.com:5671"
+  value       = "temphost"
 }
