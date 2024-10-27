@@ -1,6 +1,6 @@
 module "kubernetes_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
-  version = "~> v1.17.0"
+  source            = "aws-ia/eks-blueprints-addons/aws"
+  version           = "~> v1.17.0"
   cluster_name      = module.eks_blueprints.eks_cluster_id
   cluster_endpoint  = module.eks_blueprints.eks_cluster_endpoint
   cluster_version   = module.eks_blueprints.eks_cluster_version
@@ -8,13 +8,13 @@ module "kubernetes_addons" {
 
   # EKS Add-ons
   enable_aws_load_balancer_controller = true
-  enable_cert_manager   = true
-  enable_external_secrets = true
-  enable_argocd = true
+  enable_cert_manager                 = true
+  enable_external_secrets             = true
+  enable_argocd                       = true
   argocd = {
     server = {
       ingress = {
-        enabled         = true
+        enabled          = true
         ingressClassName = "alb"
         annotations = {
           "alb.ingress.kubernetes.io/scheme"       = "internal"

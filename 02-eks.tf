@@ -21,9 +21,9 @@ module "eks_cluster" {
       desired_size    = "2"
       max_size        = "2"
       min_size        = "2"
-      subnet_ids                   = module.vpc.private_subnets
+      subnet_ids      = module.vpc.private_subnets
       iam_role_additional_policies = {
-        ECRaccess = "${aws_iam_policy.ecr_parameter_policy.arn}" 
+        ECRaccess = "${aws_iam_policy.ecr_parameter_policy.arn}"
       }
     }
   }

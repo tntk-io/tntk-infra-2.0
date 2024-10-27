@@ -15,21 +15,21 @@ resource "helm_release" "gha_actions_runner_controller" {
 
 
 resource "helm_release" "gha_actions_runner_scale_set" {
-  name             = "gha-runner-scale-set"
-  chart            = "gha-runner-scale-set"
-  repository       = "https://actions-runner-controller.github.io/gha-runner-scale-set"
-  namespace        = "actions-runner-system"
-  version          = "0.27.6"
+  name       = "gha-runner-scale-set"
+  chart      = "gha-runner-scale-set"
+  repository = "https://actions-runner-controller.github.io/gha-runner-scale-set"
+  namespace  = "actions-runner-system"
+  version    = "0.27.6"
 
- set {
-   name = "githubConfigUrl"
-   value = "https://github.com/${var.github_organization}"
- }
- 
- set {
-   name = "githubConfigSecret.github_token"
-   value = var.github_token
- }
+  set {
+    name  = "githubConfigUrl"
+    value = "https://github.com/${var.github_organization}"
+  }
+
+  set {
+    name  = "githubConfigSecret.github_token"
+    value = var.github_token
+  }
   depends_on = [helm_release.cert-manager, module.eks_blueprints, helm_release.actions-runner-controller]
 }
 

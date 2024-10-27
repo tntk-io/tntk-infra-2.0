@@ -9,7 +9,7 @@ variable "aws_region" {
 }
 
 variable "github_organization" {
-  type = string
+  type        = string
   description = "Github Organization"
 }
 
@@ -54,34 +54,34 @@ variable "cd_project_repo" {
 }
 
 variable "argocd_repos" {
-  type = map(any)
+  type        = map(any)
   description = "ArgoCD repositories."
 }
 
 variable "argocd_apps" {
-  type = map(any)
+  type        = map(any)
   description = "ArgoCD applications to be created."
 
   ### Example of Usage
-    # argocd_apps = {
-    #   tntk-books = {
-    #     name      = "tntk-books"
-    #     namespace = "argocd"
-    #     destination = {
-    #       server    = "https://kubernetes.default.svc"
-    #       namespace = "default"
-    #     }
-    #     source = {
-    #       repo_url        = "https://github.com/tntk-io/tntk-k8s-manifests"
-    #       chart           = "charts/tntk-books"
-    #       target_revision = "HEAD"
-    #     }
-    #     helm = {
-    #       release_name     = "tntk-books"
-    #       value_files_path = ["values.yaml"]
-    #     }
-    #   }
-    # }
+  # argocd_apps = {
+  #   tntk-books = {
+  #     name      = "tntk-books"
+  #     namespace = "argocd"
+  #     destination = {
+  #       server    = "https://kubernetes.default.svc"
+  #       namespace = "default"
+  #     }
+  #     source = {
+  #       repo_url        = "https://github.com/tntk-io/tntk-k8s-manifests"
+  #       chart           = "charts/tntk-books"
+  #       target_revision = "HEAD"
+  #     }
+  #     helm = {
+  #       release_name     = "tntk-books"
+  #       value_files_path = ["values.yaml"]
+  #     }
+  #   }
+  # }
 }
 
 variable "argocd_repos" {

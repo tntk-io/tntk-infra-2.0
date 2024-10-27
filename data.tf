@@ -16,5 +16,5 @@ data "kubernetes_secret" "argocd_admin_password" {
 }
 
 data "aws_secretsmanager_secret_version" "rds_password" {
-  secret_id = module.rds.db_instance_master_user_secret_arn  # Replace with your secret ARN
+  secret_id = module.rds.db_instance_master_user_secret_arn # Replace with your secret ARN
 }
