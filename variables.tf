@@ -43,16 +43,6 @@ variable "github_token" {
   description = "registration token to register github runner for CI"
 }
 
-variable "ci_project_repo" {
-  type        = string
-  description = "CI project repo to register github runner"
-}
-
-variable "cd_project_repo" {
-  type        = string
-  description = "argo CD project repo"
-}
-
 variable "argocd_repos" {
   type        = map(any)
   description = "ArgoCD repositories."
