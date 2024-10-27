@@ -60,8 +60,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 Run the following commands to install prereqs for this final project.
-* npm
-  ```sh
+* ```sh
     brew install tfenv gh
   ```
 
