@@ -45,7 +45,7 @@ This repo contains the Terraform code for building the tntk-io 2.0 final project
 
 ### Built With
 
-* [![Terraform][Terraform]][terraform]
+* [![Terraform][terraform-image]][terraform-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -59,27 +59,23 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Run the following commands to install prereqs for this final project.
 * npm
   ```sh
-  npm install npm@latest -g
+    brew install tfenv gh
   ```
 
 ### Installation
 
-1. Run 
-  ```sh
-  brew install tfenv
-  ```
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/tntk-io/tntk-infra-2.0.git
    ```
-3. Create a tfvars override file
+2. Create a tfvars override file
    
-4. Fill out all variables in override file using your account details
+3. Fill out all variables in override file using your account details
    
-5. Run Terraform commands to build project
+4. Run Terraform commands to build project
    ```sh
    terraform init
    terraform plan -out my.plan
@@ -259,16 +255,5 @@ ecr_repos = {
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[Terraform]: https://terraform.io
+[terraform-image]: https://static-00.iconduck.com/assets.00/terraform-icon-452x512-ildgg5fd.png
+[terraform-url]: https://terraform.io
