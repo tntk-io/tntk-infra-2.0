@@ -2,7 +2,7 @@
 ###            HELM               ###
 #####################################
 
-resource "helm_release" "actions-runner-controller" {
+resource "helm_release" "gha_actions_runner_controller" {
   name             = "gha-runner-scale-set-controller"
   chart            = "gha-runner-scale-set-controller"
   repository       = "https://actions-runner-controller.github.io/gha-runner-scale-set-controller"
@@ -14,7 +14,7 @@ resource "helm_release" "actions-runner-controller" {
 }
 
 
-resource "helm_release" "actions-runner-controller" {
+resource "helm_release" "gha_actions_runner_scale_set" {
   name             = "gha-runner-scale-set"
   chart            = "gha-runner-scale-set"
   repository       = "https://actions-runner-controller.github.io/gha-runner-scale-set"
@@ -23,7 +23,7 @@ resource "helm_release" "actions-runner-controller" {
 
  set {
    name = "githubConfigUrl"
-   value = "https://github.com/tntk-io"
+   value = "https://github.com/${var.github_organization}"
  }
  
  set {

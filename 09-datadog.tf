@@ -2,7 +2,7 @@
 # ###          DATADOG              ###
 # #####################################
 
-resource "aws_cloudformation_stack" "DatadogIntegration" {
+resource "aws_cloudformation_stack" "datadog_integration" {
   name         = "DatadogIntegration"
   capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"]
   parameters = {

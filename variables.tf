@@ -8,6 +8,11 @@ variable "aws_region" {
   description = "AWS region to create our resources"
 }
 
+variable "github_organization" {
+  type = string
+  description = "Github Organization"
+}
+
 variable "tag_env" {
   default     = "prod"
   description = "tag environment for out all resources"
@@ -77,4 +82,38 @@ variable "argocd_apps" {
     #     }
     #   }
     # }
+}
+
+variable "argocd_repos" {
+  description = "Map of ArgoCD repository configuration"
+  type = map(object({
+    name     = string
+    repo_url = string
+  }))
+}
+
+variable "aws_auth_config" {
+  description = "Configuration for AWS EKS authentication"
+  type = object({
+    roles = optional(list(object({
+      rolearn  = string
+      username = string
+      groups   = list(string)
+    }))),
+    users = optional(list(object({
+      userarn  = string
+      username = string
+      groups   = list(string)
+    }))),
+    accounts = optional(list(string))
+  })
+  default = {}
+}
+
+variable "ecr_repos" {
+  description = "Map of ECR repositories and their settings"
+  type = map(object({
+    name         = string
+    count_number = number
+  }))
 }

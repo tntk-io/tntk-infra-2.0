@@ -2,7 +2,7 @@
 ###          EKS MODULE           ###
 #####################################
 
-module "eks_blueprints" {
+module "eks_cluster" {
   source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0"
 
   cluster_name    = "eks-${var.tag_env}"
@@ -29,38 +29,20 @@ module "eks_blueprints" {
   }
 }
 
-module "kubernetes_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
-  version = "~> v1.17.0"
-  cluster_name      = module.eks_blueprints.eks_cluster_id
-  cluster_endpoint  = module.eks_blueprints.eks_cluster_endpoint
-  cluster_version   = module.eks_blueprints.eks_cluster_version
-  oidc_provider_arn = module.eks_blueprints.eks_oidc_provider_arn
+module "eks_cluster_auth" {
+  source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
+  version = "~> 20.0"
 
-  # EKS Add-ons
-  enable_aws_load_balancer_controller = true
-  enable_cert_manager   = true
-  enable_external_secrets = true
-  enable_argocd = true
-  argocd = {
-    server = {
-      ingress = {
-        enabled         = true
-        ingressClassName = "alb"
-        annotations = {
-          "alb.ingress.kubernetes.io/scheme"       = "internal"
-          "alb.ingress.kubernetes.io/target-type"  = "ip"
-          "alb.ingress.kubernetes.io/listen-ports" = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
-          "alb.ingress.kubernetes.io/ssl-redirect" = "443"
-        }
-      }
-      hosts = ["argo.${var.tag_env}.${var.base_domain}"]
-    }
-}
+  aws_auth_roles    = var.aws_auth_config.roles
+  aws_auth_users    = var.aws_auth_config.users
+  aws_auth_accounts = var.aws_auth_config.accounts
+
+
+  depends_on = [module.eks]
 }
 
 
-resource "aws_iam_policy" "ecr_parameter_policy" {
+resource "aws_iam_policy" "eks_cluster_policy" {
   name        = "ECRandParameterStorePolicy"
   description = "Policy to allow ECR operations and access to Parameter Store"
 
