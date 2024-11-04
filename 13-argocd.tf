@@ -38,44 +38,36 @@ resource "kubernetes_secret" "argocd_repos" {
   depends_on = [module.eks, module.eks_addons]
 }
 
-resource "kubernetes_manifest" "argocd_application" {
+resource "argocd_application" "argocd_application" {
   for_each = var.argocd_apps
-
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-
-    metadata = {
-      name      = each.value["name"]
-      namespace = each.value["namespace"]
-
-      finalizers = [
-        "resources-finalizer.argocd.argoproj.io"
-      ]
+  metadata {
+    name      = each.value["name"]
+    namespace = each.value["namespace"]
+  }
+  cascade = false
+  wait    = true
+  spec {
+    project = "default"
+    destination {
+      server    = each.value["destination"]["server"]
+      namespace = each.value["destination"]["namespace"]
     }
 
-    spec = {
-      project = "default"
+    source {
+      repo_url        = each.value["source"]["repo_url"]
+      path            = each.value["source"]["chart"]
+      target_revision = "HEAD"
 
-      source = {
-        "repoURL"        = each.value["source"]["repo_url"]
-        "path"           = each.value["source"]["chart"]
-        "targetRevision" = "HEAD"
-
-        helm = {
-          "valueFiles" = each.value["helm"]["value_files_path"]
-        }
+      helm {
+        value_files = each.value["helm"]["value_files_path"]
       }
-      destination = {
-        "server"    = each.value["destination"]["server"]
-        "namespace" = each.value["destination"]["namespace"]
-      }
+    }
 
-      syncPolicy = {
-        automated = {
-          "prune"    = true
-          "selfHeal" = true
-        }
+
+    sync_policy {
+      automated {
+        prune     = true
+        self_heal = true
       }
     }
   }

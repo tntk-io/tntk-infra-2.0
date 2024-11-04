@@ -13,12 +13,19 @@ data "kubernetes_secret" "argocd_admin_password" {
     name      = "argocd-initial-admin-secret"
     namespace = "argocd"
   }
+  depends_on = [module.eks_addons]
 }
 
 data "aws_secretsmanager_secret_version" "rds_password" {
   secret_id = module.rds.db_instance_master_user_secret_arn # Replace with your secret ARN
 }
 
+data "aws_eks_cluster" "cluster" {
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
+}
+
 data "aws_eks_cluster_auth" "cluster_auth" {
-  name = module.eks.cluster_name
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
 }

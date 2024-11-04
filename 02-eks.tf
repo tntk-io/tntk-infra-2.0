@@ -3,17 +3,17 @@
 #####################################
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name    = var.eks_settings["cluster"]["name"]
-  cluster_version = var.eks_settings["cluster"]["version"]
+  cluster_name                   = var.eks_settings["cluster"]["name"]
+  cluster_version                = var.eks_settings["cluster"]["version"]
   cluster_endpoint_public_access = var.eks_settings["cluster"]["cluster_endpoint_public_access"]
-  cluster_addons                         = var.eks_settings["cluster_addons"]
-  enable_irsa = true
+  cluster_addons                 = var.eks_settings["cluster_addons"]
+  enable_irsa                    = true
 
-  vpc_id = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id                   = module.vpc.vpc_id
+  subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.public_subnets
 
   eks_managed_node_group_defaults = {
