@@ -1,10 +1,10 @@
-module "kubernetes_addons" {
+module "eks_addons" {
   source            = "aws-ia/eks-blueprints-addons/aws"
-  version           = "~> v1.17.0"
-  cluster_name      = module.eks_blueprints.eks_cluster_id
-  cluster_endpoint  = module.eks_blueprints.eks_cluster_endpoint
-  cluster_version   = module.eks_blueprints.eks_cluster_version
-  oidc_provider_arn = module.eks_blueprints.eks_oidc_provider_arn
+  version           = "~> v1.6"
+  cluster_name      = module.eks.cluster_id
+  cluster_endpoint  = module.eks.cluster_endpoint
+  cluster_version   = module.eks.cluster_version
+  oidc_provider_arn = module.eks.oidc_provider_arn
 
   # EKS Add-ons
   enable_aws_load_balancer_controller = true
@@ -23,7 +23,7 @@ module "kubernetes_addons" {
           "alb.ingress.kubernetes.io/ssl-redirect" = "443"
         }
       }
-      hosts = ["argo.${var.tag_env}.${var.base_domain}"]
+      hosts = ["argo.${var.tags["Environment"]}.${var.base_domain}"]
     }
   }
 }

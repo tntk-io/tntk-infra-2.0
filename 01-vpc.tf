@@ -5,7 +5,7 @@
 module "vpc" {
   source                             = "terraform-aws-modules/vpc/aws"
   version                            = "5.12.0"
-  name                               = "${var.tag_env}-VPC"
+  name                               = "${var.tags["Environment"]}-VPC"
   cidr                               = "10.0.0.0/16"
   enable_nat_gateway                 = true
   single_nat_gateway                 = true
@@ -15,19 +15,19 @@ module "vpc" {
   public_subnets                     = ["10.0.4.0/24", "10.0.5.0/24"]
   database_subnets                   = ["10.0.41.0/24", "10.0.42.0/24"]
 
-  tags                     = { "Name" = "${var.tag_env}-VPC" }
-  database_subnet_tags     = { "Name" = "${var.tag_env}-Database-Subnet" }
-  private_route_table_tags = { "Name" = "${var.tag_env}-Private-Route-Table" }
-  public_route_table_tags  = { "Name" = "${var.tag_env}-Public-Route-Table" }
+  tags                     = { "Name" = "${var.tags["Environment"]}-VPC" }
+  database_subnet_tags     = { "Name" = "${var.tags["Environment"]}-Database-Subnet" }
+  private_route_table_tags = { "Name" = "${var.tags["Environment"]}-Private-Route-Table" }
+  public_route_table_tags  = { "Name" = "${var.tags["Environment"]}-Public-Route-Table" }
   public_subnet_tags = {
-    "Name"                                     = "${var.tag_env}-Public-Subnet",
+    "Name"                                     = "${var.tags["Environment"]}-Public-Subnet",
     "kubernetes.io/role/elb"                   = 1,
-    "kubernetes.io/cluster/eks-${var.tag_env}" = "owned"
+    "kubernetes.io/cluster/eks-${var.tags["Environment"]}" = "owned"
   }
   private_subnet_tags = {
-    "Name"                                     = "${var.tag_env}-Private-Subnet",
+    "Name"                                     = "${var.tags["Environment"]}-Private-Subnet",
     "kubernetes.io/role/internal-elb"          = 1,
-    "kubernetes.io/cluster/eks-${var.tag_env}" = "owned"
+    "kubernetes.io/cluster/eks-${var.tags["Environment"]}" = "owned"
   }
 
 }

@@ -38,7 +38,7 @@ resource "aws_iam_role_policy" "external_dns" {
       Action = [
         "route53:ChangeResourceRecordSets",
       ]
-      Resource = "${data.aws_route53_zone.final_project_dns_zone.arn}"
+      Resource = "${data.aws_route53_zone.base_domain.arn}"
       },
       {
         Effect = "Allow"

@@ -2,30 +2,32 @@
 ###          EKS MODULE           ###
 #####################################
 
-module "eks_cluster" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0"
+module "eks" {
+  source = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
 
-  cluster_name    = "eks-${var.tag_env}"
-  cluster_version = "1.29"
-  enable_irsa     = true
+  cluster_name    = var.eks_settings["cluster"]["name"]
+  cluster_version = var.eks_settings["cluster"]["version"]
+  cluster_endpoint_public_access = var.eks_settings["cluster"]["cluster_endpoint_public_access"]
+  cluster_addons                         = var.eks_settings["cluster_addons"]
+  enable_irsa = true
 
   vpc_id = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+  control_plane_subnet_ids = module.vpc.public_subnets
 
-  private_subnet_ids = module.vpc.private_subnets
+  eks_managed_node_group_defaults = {
+    instance_types = var.eks_settings["node_group_defaults"]["instance_types"]
+  }
+  # Cluster access entry
+  # To add the current caller identity as an administrator
+  enable_cluster_creator_admin_permissions = var.eks_settings["cluster"]["enable_cluster_creator_admin_permissions"]
 
-  managed_node_groups = {
-    role = {
-      capacity_type   = "SPOT"
-      node_group_name = "general"
-      instance_types  = ["t3.medium"]
-      desired_size    = "2"
-      max_size        = "2"
-      min_size        = "2"
-      subnet_ids      = module.vpc.private_subnets
-      iam_role_additional_policies = {
-        ECRaccess = "${aws_iam_policy.ecr_parameter_policy.arn}"
-      }
-    }
+  access_entries = var.eks_settings["access_entries"]
+
+  tags = {
+    Environment = var.tags["Environment"]
+    Terraform   = "true"
   }
 }
 

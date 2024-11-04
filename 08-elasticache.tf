@@ -5,7 +5,7 @@
 module "elasticache" {
   source = "terraform-aws-modules/elasticache/aws"
 
-  cluster_id               = "${var.tag_env}-redis"
+  cluster_id               = "${var.tags["Environment"]}-redis"
   create_cluster           = true
   create_replication_group = false
 
@@ -26,12 +26,12 @@ module "elasticache" {
   subnet_ids = module.vpc.private_subnets
 
   tags = {
-    Name = "${var.tag_env}-redis"
+    Name = "${var.tags["Environment"]}-redis"
   }
 }
 
 resource "aws_ssm_parameter" "save_redis_endpoint_to_ssm" {
-  name        = "/${var.tag_env}/redis/endpoint"
+  name        = "/${var.tags["Environment"]}/redis/endpoint"
   description = "Redis Endpoint"
   type        = "SecureString"
   value       = module.elasticache.cluster_cache_nodes[0].address

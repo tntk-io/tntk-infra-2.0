@@ -1,12 +1,21 @@
+locals {
+  ecr_repos = [
+    "${var.tags["Environment"]}/books",
+    "${var.tags["Environment"]}/auth",
+    "${var.tags["Environment"]}/ui",
+    "${var.tags["Environment"]}/order"
+  ]
+}
+
 #####################################
 ###         ECR MODULE            ###
 #####################################
 
 module "ecr" {
   source   = "terraform-aws-modules/ecr/aws"
-  for_each = ["${var.tag_env}/books", "${var.tag_env}/order", "${var.tag_env}/auth", "${var.tag_env}/ui"]
+  for_each = toset(local.ecr_repos)
 
-  repository_name = each.value.name
+  repository_name = each.value
 
   repository_image_scan_on_push = false
 
@@ -18,11 +27,11 @@ module "ecr" {
     rules = [
       {
         rulePriority = 1,
-        description  = "Keep last 10 images",
+        description  = "Keep last 5 images",
         selection = {
           tagStatus   = "any",
           countType   = "imageCountMoreThan",
-          countNumber = each.value.count_number
+          countNumber = 5
         },
         action = {
           type = "expire"

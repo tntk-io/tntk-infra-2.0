@@ -18,3 +18,7 @@ data "kubernetes_secret" "argocd_admin_password" {
 data "aws_secretsmanager_secret_version" "rds_password" {
   secret_id = module.rds.db_instance_master_user_secret_arn # Replace with your secret ARN
 }
+
+data "aws_eks_cluster_auth" "cluster_auth" {
+  name = module.eks.cluster_name
+}

@@ -10,7 +10,7 @@ resource "helm_release" "gha_actions_runner_controller" {
   version          = "0.27.6"
   create_namespace = "true"
 
-  depends_on = [helm_release.cert-manager, module.eks_blueprints]
+  depends_on = [module.eks]
 }
 
 
@@ -30,6 +30,6 @@ resource "helm_release" "gha_actions_runner_scale_set" {
     name  = "githubConfigSecret.github_token"
     value = var.github_token
   }
-  depends_on = [helm_release.cert-manager, module.eks_blueprints, helm_release.actions-runner-controller]
+  depends_on = [module.eks, helm_release.gha_actions_runner_controller]
 }
 

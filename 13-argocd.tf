@@ -19,7 +19,7 @@ resource "kubernetes_secret" "argocd_git_creds" {
     "password" = var.github_token
   }
 
-  depends_on = [module.eks, module.eks_blueprints_addons]
+  depends_on = [module.eks, module.eks_addons]
 }
 
 resource "kubernetes_secret" "argocd_repos" {
@@ -35,7 +35,7 @@ resource "kubernetes_secret" "argocd_repos" {
     "url" = each.value["repo_url"]
   }
 
-  depends_on = [module.eks, module.eks_blueprints_addons]
+  depends_on = [module.eks, module.eks_addons]
 }
 
 resource "kubernetes_manifest" "argocd_application" {
@@ -79,5 +79,5 @@ resource "kubernetes_manifest" "argocd_application" {
       }
     }
   }
-  depends_on = [module.eks, module.eks_blueprints_addons, kubernetes_secret.argocd_repos]
+  depends_on = [module.eks, module.eks_addons, kubernetes_secret.argocd_repos]
 }

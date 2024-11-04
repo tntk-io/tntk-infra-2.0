@@ -43,11 +43,6 @@ variable "github_token" {
   description = "registration token to register github runner for CI"
 }
 
-variable "argocd_repos" {
-  type        = map(any)
-  description = "ArgoCD repositories."
-}
-
 variable "argocd_apps" {
   type        = map(any)
   description = "ArgoCD applications to be created."
@@ -106,4 +101,48 @@ variable "ecr_repos" {
     name         = string
     count_number = number
   }))
+}
+
+variable "eks_settings" {
+  description = "Configuration settings for the EKS cluster"
+  type = object({
+    cluster = object({
+      name                                     = string
+      version                                  = string
+      cluster_endpoint_public_access           = bool
+      enable_cluster_creator_admin_permissions = bool
+    })
+    cluster_addons = map(object({
+      most_recent = bool
+    }))
+    node_group_defaults = object({
+      instance_types = list(string)
+    })
+    managed_node_groups = map(object({
+      min_size       = number
+      max_size       = number
+      desired_size   = number
+      instance_types = list(string)
+      capacity_type  = string
+    }))
+    access_entries = optional(map(object({
+      kubernetes_groups = list(string)
+      principal_arn     = string
+      policy_associations = map(object({
+        policy_arn = string
+        access_scope = object({
+          namespaces = list(string)
+          type       = string
+        })
+      }))
+    })))
+  })
+}
+
+
+variable "tags" {
+  description = "Map of Tags to be added to resources"
+  type = object({
+    Environment = string
+  })
 }
