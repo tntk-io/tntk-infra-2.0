@@ -92,23 +92,22 @@ Here is a sample tfvars override file you can use as a template.
 ```
 # Standard variables
 aws_region = "us-east-2"
-base_domain = "mydomain.test"
+base_domain = "dev.ernestdevops.net"
 tag_env = "dev"
 datadog_api_key = "MYAPIKEY"
 datadog_application_key = "MYAPPKEY"
 datadog_region = "us5.datadoghq.com"
+github_organization = "ernram"
 github_token = "MYGITHUBTOKEN"
 
-
-
-# CICD overrides
+# This variable is used to imports GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
 argocd_repos = {
   test = {
-    repo_url = "https://github.com/${var.base_domain}/test"
-    name     = "test"
+    repo_url = "https://github.com/ernram/final-cd"
+    name     = "final-cd"
   }
 }
-
+# This variable is used to define ArgoCD applications that will be automatically created in ArgoCD when it comes up
 argocd_apps = {
   shared-resources = {
     name      = "shared-resources"
@@ -211,7 +210,7 @@ argocd_apps = {
     }
   }
 }
-
+# This variable is used to provide EKS permissions to additional IAM users or roles
 aws_auth_config = {
   roles = [
     # {
@@ -222,16 +221,16 @@ aws_auth_config = {
   ],
   users = [
     {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/ernest.ramirez"
+      userarn  = "arn:aws:iam::038891198925user/ernest.ramirez"
       username = "ernest.ramirez"
       groups   = ["system:masters"]
     }
   ],
   accounts = [
-    "${data.aws_caller_identity.current.account_id}"
+    "038891198925"
   ]
 }
-
+# This variable is used to define the ECR repos we should create
 ecr_repos = {
   tntk-web = {
     name         = "tntk-web"
@@ -249,6 +248,45 @@ ecr_repos = {
     name         = "tntk-products"
     count_number = 10
   }
+}
+# This variable is used to define EKS settings that will be applied to the cluster
+eks_settings = {
+  cluster = {
+    name                                     = "final-project"
+    version                                  = "1.29"
+    cluster_endpoint_public_access           = true
+    enable_cluster_creator_admin_permissions = true
+  }
+  cluster_addons = {
+    eks-pod-identity-agent = {
+      most_recent = true
+    }
+    coredns = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+  node_group_defaults = {
+    instance_types = ["t3a.small"]
+  }
+  managed_node_groups = {
+    tntk_eks_nodes = {
+      min_size       = 2
+      max_size       = 2
+      desired_size   = 2
+      instance_types = ["t3a.medium"]
+      capacity_type  = "SPOT"
+    }
+  }
+}
+# This variable is used to define AWS tags that will be added onto relevant resources
+tags = {
+  Environment = "dev"
 }
 ```
 
