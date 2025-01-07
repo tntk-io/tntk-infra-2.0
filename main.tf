@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 1.4.2"
+  required_version = ">= 1.5.4"
   required_providers {
     argocd = {
       source  = "argoproj-labs/argocd"
-      version = "7.0.3"
+      version = "7.2.0"
     }
     aws = {
       source  = "hashicorp/aws"

@@ -4,38 +4,22 @@ resource "aws_ssm_parameter" "ssm_argocd_admin_password" {
   value = data.kubernetes_secret.argocd_admin_password.data["password"]
 }
 
-resource "kubernetes_secret" "argocd_git_creds" {
-  metadata {
-    namespace = "argocd"
-    name      = "argocd-credential-template"
-    labels = {
-      "argocd.argoproj.io/secret-type" = "repo-creds"
-    }
-  }
-  data = {
-    "type"     = "git",
-    "url"      = "https://github.com/${var.github_organization}",
-    "username" = "git",
-    "password" = var.github_token
-  }
+resource "argocd_repository_credentials" "github" {
+  url = "https://github.com/${var.github_organization}"
+  username = "git" 
+  password = var.github_token
 
-  depends_on = [module.eks, module.eks_addons]
+  depends_on = [ module.eks, module.eks_addons ]
 }
 
-resource "kubernetes_secret" "argocd_repos" {
+resource "argocd_repository" "repos" {
   for_each = var.argocd_repos
-  metadata {
-    namespace = "argocd"
-    name      = each.key
-    labels = {
-      "argocd.argoproj.io/secret-type" = "repository"
-    }
-  }
-  data = {
-    "url" = each.value["repo_url"]
-  }
+  
+  name = each.key
+  repo = each.value["repo_url"]
+  type = "git"
 
-  depends_on = [module.eks, module.eks_addons]
+  depends_on = [ module.eks, module.eks_addons ]
 }
 
 resource "argocd_application" "argocd_application" {
