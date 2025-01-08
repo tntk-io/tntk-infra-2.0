@@ -1,10 +1,13 @@
 # Standard variables
 aws_region = "us-east-2"
+aws_account_id = "012345678901"
 base_domain = "dev.ernestdevops.net"
 tag_env = "dev"
 datadog_api_key = "MYAPIKEY"
 datadog_application_key = "MYAPPKEY"
 datadog_region = "us5.datadoghq.com"
+github_email = "ernest@ernestramirez.tech"
+github_name = "ernest.ramirez"
 github_organization = "ernram"
 github_token = "MYGITHUBTOKEN"
 
@@ -29,7 +32,7 @@ argocd_apps = {
       namespace = "default"
     }
     source = {
-      repo_url        = "https://github.com/tntk-io/tntk-k8s-manifests"
+      repo_url        = "https://github.com/ernram/final-project-cd"
       chart           = "charts/dev-resources"
       target_revision = "0.0.1"
     }
@@ -49,7 +52,7 @@ argocd_apps = {
       namespace = "dev"
     }
     source = {
-      repo_url        = "https://github.com/tntk-io/tntk-web-2.0"
+      repo_url        = "https://github.com/ernram/final-project-web"
       chart           = "charts/tntk-web"
       target_revision = "0.0.1"
     }
@@ -69,7 +72,7 @@ argocd_apps = {
       namespace = "dev"
     }
     source = {
-      repo_url        = "https://github.com/tntk-io/tntk-orders"
+      repo_url        = "https://github.com/ernram/final-project-orders"
       chart           = "charts/tntk-orders"
       target_revision = "0.0.1"
     }
@@ -89,7 +92,7 @@ argocd_apps = {
       namespace = "dev"
     }
     source = {
-      repo_url        = "https://github.com/tntk-io/tntk-auth"
+      repo_url        = "https://github.com/ernram/final-project-auth"
       chart           = "charts/tntk-auth"
       target_revision = "0.0.1"
     }
@@ -109,7 +112,7 @@ argocd_apps = {
       namespace = "dev"
     }
     source = {
-      repo_url        = "https://github.com/tntk-io/tntk-products"
+      repo_url        = "https://github.com/ernram/final-project-products"
       chart           = "charts/tntk-products"
       target_revision = "0.0.1"
     }
@@ -193,24 +196,25 @@ eks_settings = {
 
 # Repositories for the project
 repositories = {
+  final-project-auth = {
+    description  = "Auth application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-auth"
+  }
   final-project-cd = {
     description  = "Manifests for the final project"
     visibility   = "public"
     has_issues   = false
     has_projects = false
     has_wiki     = false
-  }
-  final-project-web = {
-    description  = "Web application for the final project"
-    visibility   = "public"
-    has_issues   = false
-    has_projects = false
-    has_wiki     = false
-    clone_url    = "https://github.com/tntk-io/tntk-web-2.0"
+    clone_url    = "https://github.com/tntk-io/tntk-cd-2.0"
   }
   final-project-orders = {
     description  = "Orders application for the final project"
-    visibility   = "public"
+    visibility   = "private"
     has_issues   = false
     has_projects = false
     has_wiki     = false
@@ -218,19 +222,19 @@ repositories = {
   }
   final-project-products = {
     description  = "Products application for the final project"
-    visibility   = "public"
+    visibility   = "private"
     has_issues   = false
     has_projects = false
     has_wiki     = false
     clone_url    = "https://github.com/tntk-io/tntk-products"
   }
-  final-project-auth = {
-    description  = "Auth application for the final project"
-    visibility   = "public"
+  final-project-web = {
+    description  = "Web application for the final project"
+    visibility   = "private"
     has_issues   = false
     has_projects = false
     has_wiki     = false
-    clone_url    = "https://github.com/tntk-io/tntk-auth"
+    clone_url    = "https://github.com/tntk-io/tntk-web-2.0"
   }
 }
 

@@ -13,6 +13,16 @@ variable "aws_region" {
   description = "AWS region to create our resources"
 }
 
+variable "github_email" {
+  type        = string
+  description = "Github email"
+}
+
+variable "github_name" {
+  type        = string
+  description = "Github name"
+}
+
 variable "github_organization" {
   type        = string
   description = "Github Organization"

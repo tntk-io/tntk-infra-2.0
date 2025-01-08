@@ -2,7 +2,8 @@ resource "null_resource" "trigger_build" {
   depends_on = [
     github_repository.repos,
     github_actions_secret.secret,
-    github_actions_variable.variable
+    github_actions_variable.variable,
+    null_resource.repo_clone
   ]
 
   for_each = {

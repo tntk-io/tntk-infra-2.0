@@ -9,6 +9,8 @@ locals {
     APPLICATION_NAMESPACE = "application"
     CD_DESTINATION_OWNER  = var.github_organization
     CD_PROJECT            = "final-project-cd"
+    GITHUB_EMAIL          = var.github_email
+    GITHUB_NAME           = var.github_name
   }
 
   base_secrets = {
