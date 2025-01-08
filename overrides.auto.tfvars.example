@@ -8,13 +8,14 @@ datadog_region = "us5.datadoghq.com"
 github_organization = "ernram"
 github_token = "MYGITHUBTOKEN"
 
-# This variable is used to imports GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
+# This variable is used to import GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
 argocd_repos = {
   test = {
     repo_url = "https://github.com/ernram/final-cd"
     name     = "final-cd"
   }
 }
+
 # This variable is used to define ArgoCD applications that will be automatically created in ArgoCD when it comes up
 argocd_apps = {
   shared-resources = {
@@ -118,26 +119,22 @@ argocd_apps = {
     }
   }
 }
+
 # This variable is used to provide EKS permissions to additional IAM users or roles
 aws_auth_config = {
-  roles = [
-    # {
-    #   rolearn  = "arn:aws:iam::66666666666:role/role1"
-    #   username = "role1"
-    #   groups   = ["system:masters"]
-    # }
-  ],
+  roles = []
   users = [
     {
-      userarn  = "arn:aws:iam::038891198925user/ernest.ramirez"
+      userarn  = "arn:aws:iam::038891198925:user/ernest.ramirez"
       username = "ernest.ramirez"
       groups   = ["system:masters"]
     }
-  ],
+  ]
   accounts = [
     "038891198925"
   ]
 }
+
 # This variable is used to define the ECR repos we should create
 ecr_repos = {
   tntk-web = {
@@ -157,6 +154,7 @@ ecr_repos = {
     count_number = 10
   }
 }
+
 # This variable is used to define EKS settings that will be applied to the cluster
 eks_settings = {
   cluster = {
@@ -193,48 +191,50 @@ eks_settings = {
   }
 }
 
+# Repositories for the project
 repositories = {
   final-project-cd = {
-    description = "Final CD project"
-    visibility = "public"
-    has_issues = false
+    description  = "Manifests for the final project"
+    visibility   = "public"
+    has_issues   = false
     has_projects = false
-    has_wiki = false
+    has_wiki     = false
   }
   final-project-web = {
-    description = "Final CD project"
-    visibility = "public"
-    has_issues = false
+    description  = "Web application for the final project"
+    visibility   = "public"
+    has_issues   = false
     has_projects = false
-    has_wiki = false
-    clone_url = "https://github.com/tntk-io/tntk-web-2.0"
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-web-2.0"
   }
   final-project-orders = {
-    description = "Final CD project"
-    visibility = "public"
-    has_issues = false
+    description  = "Orders application for the final project"
+    visibility   = "public"
+    has_issues   = false
     has_projects = false
-    has_wiki = false
-    clone_url = "https://github.com/tntk-io/tntk-orders"
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-orders"
   }
   final-project-products = {
-    description = "Tentek Web 2.0 project"
-    visibility = "public"
-    has_issues = false
+    description  = "Products application for the final project"
+    visibility   = "public"
+    has_issues   = false
     has_projects = false
-    has_wiki = false
-    clone_url = "https://github.com/tntk-io/tntk-products"
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-products"
   }
   final-project-auth = {
-    description = "Tentek Auth 2.0 project"
-    visibility = "public"
-    has_issues = false
+    description  = "Auth application for the final project"
+    visibility   = "public"
+    has_issues   = false
     has_projects = false
-    has_wiki = false
-    clone_url = "https://github.com/tntk-io/tntk-auth"
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-auth"
   }
 }
-# This variable is used to define AWS tags that will be added onto relevant resources
+
+# Tags to be applied to resources
 tags = {
   Environment = "dev"
 }

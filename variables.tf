@@ -3,6 +3,11 @@ variable "base_domain" {
   description = "Base domain for our DNS records"
 }
 
+variable "aws_account_id" {
+  type        = string
+  description = "AWS account ID"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS region to create our resources"
