@@ -5,21 +5,21 @@ resource "aws_ssm_parameter" "ssm_argocd_admin_password" {
 }
 
 resource "argocd_repository_credentials" "github" {
-  url = "https://github.com/${var.github_organization}"
-  username = "git" 
+  url      = "https://github.com/${var.github_organization}"
+  username = "git"
   password = var.github_token
 
-  depends_on = [ module.eks, module.eks_addons ]
+  depends_on = [module.eks, module.eks_addons]
 }
 
 resource "argocd_repository" "repos" {
   for_each = var.argocd_repos
-  
+
   name = each.key
   repo = each.value["repo_url"]
   type = "git"
 
-  depends_on = [ module.eks, module.eks_addons ]
+  depends_on = [module.eks, module.eks_addons]
 }
 
 resource "argocd_application" "argocd_application" {
@@ -55,5 +55,5 @@ resource "argocd_application" "argocd_application" {
       }
     }
   }
-  depends_on = [module.eks, module.eks_addons, kubernetes_secret.argocd_repos]
+  depends_on = [module.eks, module.eks_addons, argocd_repository.repos]
 }

@@ -7,7 +7,11 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "5.74.0"
+      version = "5.82.2"
+    }
+    github = {
+      source  = "integrations/github"
+      version = "~> 6.0"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -48,6 +52,10 @@ provider "aws" {
       ManagedBy   = "Terraform"
     }
   }
+}
+
+provider "github" {
+  token = var.github_token
 }
 
 provider "helm" {

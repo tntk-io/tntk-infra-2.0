@@ -38,6 +38,11 @@ variable "datadog_region" {
 #####################################
 
 # required github token
+variable "github_owner" {
+  type        = string
+  description = "Github owner"
+}
+
 variable "github_token" {
   type        = string
   description = "registration token to register github runner for CI"
@@ -137,6 +142,18 @@ variable "eks_settings" {
       }))
     })))
   })
+}
+
+variable "repositories" {
+  description = "Map of GitHub repositories for the final project"
+  type = map(object({
+    description  = string
+    visibility   = string
+    has_issues   = bool
+    has_projects = bool
+    has_wiki     = bool
+    clone_url    = optional(string) # if not provided, the repository will be created from scratch
+  }))
 }
 
 
