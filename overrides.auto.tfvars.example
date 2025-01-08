@@ -10,9 +10,9 @@ github_token = "MYGITHUBTOKEN"
 
 # This variable is used to import GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
 argocd_repos = {
-  test = {
-    repo_url = "https://github.com/ernram/final-cd"
-    name     = "final-cd"
+  final-project-cd = {
+    repo_url = "https://github.com/ernram/final-project-cd"
+    name     = "final-project-cd"
   }
 }
 

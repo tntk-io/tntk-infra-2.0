@@ -17,7 +17,7 @@ resource "null_resource" "trigger_build" {
   provisioner "local-exec" {
     command = <<EOT
       # Clone the repo
-      git clone https://github.com/${var.github_owner}/${self.triggers.repo_name}.git /tmp/${self.triggers.repo_name}
+      git clone https://github.com/${var.github_organization}/${self.triggers.repo_name}.git /tmp/${self.triggers.repo_name}
       cd /tmp/${self.triggers.repo_name}
       
       # Configure git

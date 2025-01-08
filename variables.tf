@@ -43,11 +43,6 @@ variable "datadog_region" {
 #####################################
 
 # required github token
-variable "github_owner" {
-  type        = string
-  description = "Github owner"
-}
-
 variable "github_token" {
   type        = string
   description = "registration token to register github runner for CI"

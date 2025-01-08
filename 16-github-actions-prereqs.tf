@@ -7,7 +7,7 @@ locals {
     BASE_DOMAIN           = var.base_domain
     APPLICATION_NAME      = "demoapp"
     APPLICATION_NAMESPACE = "application"
-    CD_DESTINATION_OWNER  = var.github_owner
+    CD_DESTINATION_OWNER  = var.github_organization
     CD_PROJECT            = "final-project-cd"
   }
 
@@ -27,7 +27,7 @@ locals {
   all_variables = merge([
     for repo in local.repositories : {
       for var_name, var_value in local.base_variables : "${repo}/${var_name}" => {
-        repository = "${var.github_owner}/${repo}"
+        repository = "${var.github_organization}/${repo}"
         name       = var_name
         value      = var_value
       }
@@ -37,7 +37,7 @@ locals {
   all_secrets = merge([
     for repo in local.repositories : {
       for secret_name, secret_value in local.base_secrets : "${repo}/${secret_name}" => {
-        repository = "${var.github_owner}/${repo}"
+        repository = "${var.github_organization}/${repo}"
         name       = secret_name
         value      = secret_value
       }

@@ -11,7 +11,7 @@ resource "null_resource" "repo_clone" {
     command = <<-EOT
       git clone --mirror ${each.value.clone_url}.git temp_${each.key}
       cd temp_${each.key}
-      git remote set-url origin https://github.com/${var.github_owner}/${each.key}.git
+      git remote set-url origin https://github.com/${var.github_organization}/${each.key}.git
       git push --mirror
       cd ..
       rm -rf temp_${each.key}
