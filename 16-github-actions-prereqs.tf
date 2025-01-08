@@ -2,13 +2,13 @@
 locals {
   # Common variables and secrets that all repositories share
   base_variables = {
-    ACCOUNT_ID           = var.aws_account_id
-    AWS_REGION           = var.aws_region
-    BASE_DOMAIN          = var.base_domain
-    APPLICATION_NAME     = "demoapp"
+    ACCOUNT_ID            = var.aws_account_id
+    AWS_REGION            = var.aws_region
+    BASE_DOMAIN           = var.base_domain
+    APPLICATION_NAME      = "demoapp"
     APPLICATION_NAMESPACE = "application"
-    CD_DESTINATION_OWNER = var.github_owner
-    CD_PROJECT           = "final-project-cd"
+    CD_DESTINATION_OWNER  = var.github_owner
+    CD_PROJECT            = "final-project-cd"
   }
 
   base_secrets = {
