@@ -1,7 +1,9 @@
 ![TNTK DevOps Logo](assets/tntk_devops.png)
 # TNTK Infra 2.0 Documentation
+### About
+This repo contains the Terraform code for the TNTK Final Project 2.0. It is built with Terraform to build and manage AWS infrastructure, Kubernetes, ArgoCD, and more.
 
-### Usage
+### Getting Started
 1. Clone the repository.
 ```sh
 git clone https://github.com/tntk-io/tntk-infra-2.0.git
