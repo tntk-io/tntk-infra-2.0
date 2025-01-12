@@ -570,19 +570,10 @@
   - Provides an overview of the project, including its purpose, setup instructions, and usage examples.
   - Serves as a guide for new users to understand the project structure and get started quickly.
 
-- **Key Sections**:
-  ```markdown
-  # TNTK Infra 2.0
 
-  ## About
-  This project is built with Terraform to manage AWS infrastructure.
 
-  ## Getting Started
-  ### Prerequisites
-  - Terraform >= 1.5.4
-  - AWS CLI
 
-  ### Installation
+  ## Usage
   1. Clone the repository.
   ```sh
   git clone https://github.com/tntk-io/tntk-infra-2.0.git
@@ -610,8 +601,7 @@
   ```
 
 
-  ## Usage
-  Example `tfvars` file:
+  ## Sample `tfvars` file:
   ```hcl
   # Standard variables
   aws_region = "us-east-2"
