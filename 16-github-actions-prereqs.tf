@@ -1,10 +1,10 @@
 # This resource creates the GitHub Actions secrets and variables required for our GitHub Actions workflow
 locals {
   camel_case_variables = {
-    final-project-web = "tntkWeb"
-    final-project-orders = "tntkOrders"
+    final-project-web      = "tntkWeb"
+    final-project-orders   = "tntkOrders"
     final-project-products = "tntkBooks"
-    final-project-auth = "tntkAuth"
+    final-project-auth     = "tntkAuth"
   }
 
   # Common variables and secrets that all repositories share
