@@ -1,5 +1,5 @@
 output "argocd_admin_password" {
-  value = random_password.argocd_admin_password.result
+  value = data.kubernetes_secret.argocd_admin_password.data["password"]
 }
 
 output "argocd_url" {
@@ -11,9 +11,13 @@ output "argocd_username" {
 }
 
 output "aws_eks_command" {
-  value = "aws eks update-kubeconfig --name ${aws_eks_cluster.cluster.name} --region ${var.aws_region}"
+  value = "aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${data.aws_region.current.name}"
+}
+
+output "kubectl_port_forward_command" {
+  value = "kubectl port-forward svc/argocd-server -n argocd 8080:443"
 }
 
 output "aws_eks_cluster_name" {
-  value = aws_eks_cluster.cluster.name
+  value = module.eks.cluster_name
 }

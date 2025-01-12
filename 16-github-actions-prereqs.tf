@@ -16,9 +16,9 @@ locals {
     APPLICATION_NAMESPACE       = "application"
     CD_DESTINATION_OWNER        = var.github_organization
     CD_PROJECT                  = "final-project-cd"
-    GITHUB_EMAIL                = var.github_email
-    GITHUB_NAME                 = var.github_name
-    GITHUB_ACTIONS_ECR_ROLE_ARN = aws_iam_role.github_actions_ecr.arn
+    GH_EMAIL                    = var.github_email
+    GH_NAME                     = var.github_name
+    GHA_ECR_ROLE_ARN = aws_iam_role.github_actions_ecr.arn
   }
 
   base_secrets = {
@@ -26,14 +26,12 @@ locals {
   }
 
   # Dynamic variables that are specific to each repository
-  # If repo == camel_case_variables, then we use the camel_case_variables value as the YQ_TAG_PATH
+  # Maps each repository to its corresponding camel case value for YQ_PATH
   dynamic_variables = {
-    for repo in local.repositories : repo => {
-      for var_name, var_value in local.camel_case_variables : "${repo}/${var_name}" => {
-        repository = "${var.github_organization}/${repo}"
-        name       = "YQ_TAG_PATH"
-        value      = var_value
-      } if var_name == repo
+    for repo in local.repositories : "${var.github_organization}/${repo}" => {
+      repository = "${var.github_organization}/${repo}"
+      name       = "YQ_PATH"
+      value      = local.camel_case_variables[repo]
     }
   }
 
