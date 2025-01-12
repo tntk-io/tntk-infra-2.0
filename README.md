@@ -53,8 +53,19 @@ This repo contains the Terraform code for building the tntk-io 2.0 final project
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get started with this project, you'll need to create a tfvars override file. You can use the provided generate-overrides.sh script to create one:
+
+1. Run the generate-overrides script:
+   ```sh
+   ./generate-overrides.sh
+   ```
+
+2. The script will prompt you for required values and create a terraform.tfvars file with your inputs
+
+3. Review the generated terraform.tfvars file and adjust any values as needed
+
+This will create a tfvars file with the necessary variables pre-populated based on your inputs.
+
 
 ### Prerequisites
 
@@ -69,9 +80,10 @@ Run the following commands to install prereqs for this final project.
    ```sh
    git clone https://github.com/tntk-io/tntk-infra-2.0.git
    ```
-2. Create a tfvars override file
-   
-3. Fill out all variables in override file using your account details
+2. Run the generate-overrides script:
+   ```sh
+   ./generate-overrides.sh
+   ```
    
 4. Run Terraform commands to build project
    ```sh
@@ -91,13 +103,16 @@ Here is a sample tfvars override file you can use as a template.
 ```
 # Standard variables
 aws_region = "us-east-2"
+aws_account_id = "98239829393"
 base_domain = "dev.ernestdevops.net"
 tag_env = "dev"
-datadog_api_key = "MYAPIKEY"
-datadog_application_key = "MYAPPKEY"
-datadog_region = "us5.datadoghq.com"
+datadog_api_key = "test"
+datadog_application_key = "test"
+datadog_region = "tes.test.com"
+github_email = "test@test.com"
+github_name = "test"
 github_organization = "ernram"
-github_token = "MYGITHUBTOKEN"
+github_token = "test"
 
 # This variable is used to imports GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
 argocd_repos = {
@@ -128,7 +143,7 @@ argocd_apps = {
       value_files_path = ["values.yaml"]
     }
   }
-  tntk-web-dev = {
+  tntk-web-2.0-dev = {
     name      = "tntk-api-dev"
     namespace = "argocd"
     labels = {
@@ -220,7 +235,7 @@ aws_auth_config = {
   ],
   users = [
     {
-      userarn  = "arn:aws:iam::038891198925user/ernest.ramirez"
+      userarn  = "arn:aws:iam::038891198925:user/ernest.ramirez"
       username = "ernest.ramirez"
       groups   = ["system:masters"]
     }
