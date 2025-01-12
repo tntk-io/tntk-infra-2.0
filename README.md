@@ -1,6 +1,178 @@
 ![TNTK DevOps Logo](assets/tntk_devops.png)
 # TNTK Infra 2.0 Documentation
 
+### Usage
+1. Clone the repository.
+```sh
+git clone https://github.com/tntk-io/tntk-infra-2.0.git
+cd tntk-infra-2.0
+```
+2. Configure your AWS credentials.
+```sh
+aws configure
+```
+3. Run the generate-overrides.sh script to create a terraform.tfvars file.
+```sh
+./generate-overrides.sh
+```
+4. Run `terraform init` to initialize the project.
+```sh
+terraform init
+```
+5. Run `terraform plan` to see the changes that will be applied.
+```sh
+terraform plan
+```
+6. Run `terraform apply` to apply the changes.
+```sh
+terraform apply
+```
+
+
+### Sample `tfvars` file:
+```hcl
+# Standard variables
+aws_region = "us-east-2"
+aws_account_id = "98239829393"
+base_domain = "dev.ernestdevops.net"
+tag_env = "dev"
+datadog_api_key = "test"
+datadog_application_key = "test"
+datadog_region = "tes.test.com"
+github_email = "test@test.com"
+github_name = "test"
+github_organization = "ernram"
+github_token = "test"
+
+# JSON variables
+argocd_repos = {
+  final-project-cd = {
+    repo_url = "https://github.com/ernram/final-project-cd"
+    name     = "final-project-cd"
+  }
+}
+
+argocd_apps = {
+  shared-resources = {
+    name      = "shared-resources"
+    namespace = "argocd"
+    labels = {
+      shared = "true"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "default"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-cd"
+      chart           = "charts/dev-resources"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "shared-resources"
+      value_files_path = ["values.yaml"]
+    }
+  }
+  tntk-web-dev = {
+    name      = "tntk-api-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-web"
+      chart           = "charts/tntk-web"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-api"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-orders-dev = {
+    name      = "tntk-web-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-orders"
+      chart           = "charts/tntk-orders"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-web"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-auth-dev = {
+    name      = "tntk-auth-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-auth"
+      chart           = "charts/tntk-auth"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-api"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-products-dev = {
+    name      = "tntk-products-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-products"
+      chart           = "charts/tntk-products"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-products"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+}
+
+aws_auth_config = {
+  roles = []
+  users = [
+    {
+      userarn  = "arn:aws:iam::98239829393:user/test"
+      username = "test"
+      groups   = ["system:masters"]
+    }
+  ]
+  accounts = [
+    "98239829393"
+  ]
+}
+
+# Additional JSON variables can be added here
+```
+
+
 ## File Descriptions
 
 ### .gitignore
@@ -569,178 +741,4 @@
 - **Purpose**: 
   - Provides an overview of the project, including its purpose, setup instructions, and usage examples.
   - Serves as a guide for new users to understand the project structure and get started quickly.
-
-
-
-
-  ## Usage
-  1. Clone the repository.
-  ```sh
-  git clone https://github.com/tntk-io/tntk-infra-2.0.git
-  cd tntk-infra-2.0
-  ```
-  2. Configure your AWS credentials.
-  ```sh
-  aws configure
-  ```
-  3. Run the generate-overrides.sh script to create a terraform.tfvars file.
-  ```sh
-  ./generate-overrides.sh
-  ```
-  4. Run `terraform init` to initialize the project.
-  ```sh
-  terraform init
-  ```
-  5. Run `terraform plan` to see the changes that will be applied.
-  ```sh
-  terraform plan
-  ```
-  6. Run `terraform apply` to apply the changes.
-  ```sh
-  terraform apply
-  ```
-
-
-  ## Sample `tfvars` file:
-  ```hcl
-  # Standard variables
-  aws_region = "us-east-2"
-  aws_account_id = "98239829393"
-  base_domain = "dev.ernestdevops.net"
-  tag_env = "dev"
-  datadog_api_key = "test"
-  datadog_application_key = "test"
-  datadog_region = "tes.test.com"
-  github_email = "test@test.com"
-  github_name = "test"
-  github_organization = "ernram"
-  github_token = "test"
-
-  # JSON variables
-  argocd_repos = {
-    final-project-cd = {
-      repo_url = "https://github.com/ernram/final-project-cd"
-      name     = "final-project-cd"
-    }
-  }
-
-  argocd_apps = {
-    shared-resources = {
-      name      = "shared-resources"
-      namespace = "argocd"
-      labels = {
-        shared = "true"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "default"
-      }
-      source = {
-        repo_url        = "https://github.com/ernram/final-project-cd"
-        chart           = "charts/dev-resources"
-        target_revision = "0.0.1"
-      }
-      helm = {
-        release_name     = "shared-resources"
-        value_files_path = ["values.yaml"]
-      }
-    }
-    tntk-web-dev = {
-      name      = "tntk-api-dev"
-      namespace = "argocd"
-      labels = {
-        environment = "dev"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "dev"
-      }
-      source = {
-        repo_url        = "https://github.com/ernram/final-project-web"
-        chart           = "charts/tntk-web"
-        target_revision = "0.0.1"
-      }
-      helm = {
-        release_name     = "tntk-api"
-        value_files_path = ["../../environments/values-dev.yaml"]
-      }
-    }
-    tntk-orders-dev = {
-      name      = "tntk-web-dev"
-      namespace = "argocd"
-      labels = {
-        environment = "dev"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "dev"
-      }
-      source = {
-        repo_url        = "https://github.com/ernram/final-project-orders"
-        chart           = "charts/tntk-orders"
-        target_revision = "0.0.1"
-      }
-      helm = {
-        release_name     = "tntk-web"
-        value_files_path = ["../../environments/values-dev.yaml"]
-      }
-    }
-    tntk-auth-dev = {
-      name      = "tntk-auth-dev"
-      namespace = "argocd"
-      labels = {
-        environment = "dev"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "dev"
-      }
-      source = {
-        repo_url        = "https://github.com/ernram/final-project-auth"
-        chart           = "charts/tntk-auth"
-        target_revision = "0.0.1"
-      }
-      helm = {
-        release_name     = "tntk-api"
-        value_files_path = ["../../environments/values-dev.yaml"]
-      }
-    }
-    tntk-products-dev = {
-      name      = "tntk-products-dev"
-      namespace = "argocd"
-      labels = {
-        environment = "dev"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "dev"
-      }
-      source = {
-        repo_url        = "https://github.com/ernram/final-project-products"
-        chart           = "charts/tntk-products"
-        target_revision = "0.0.1"
-      }
-      helm = {
-        release_name     = "tntk-products"
-        value_files_path = ["../../environments/values-dev.yaml"]
-      }
-    }
-  }
-
-  aws_auth_config = {
-    roles = []
-    users = [
-      {
-        userarn  = "arn:aws:iam::98239829393:user/test"
-        username = "test"
-        groups   = ["system:masters"]
-      }
-    ]
-    accounts = [
-      "98239829393"
-    ]
-  }
-
-  # Additional JSON variables can be added here
-  ```
 
