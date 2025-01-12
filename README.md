@@ -45,7 +45,7 @@ This repo contains the Terraform code for building the tntk-io 2.0 final project
 
 ### Built With
 
-* <img src="https://static-00.iconduck.com/assets.00/terraform-icon-452x512-ildgg5fd.png" alt="Terraform" width="20" height="20">
+* <img src="https://static-00.iconduck.com/assets.00/terraform-icon-452x512-ildgg5fd.png" alt="Terraform" width="20" height="20"> Terraform
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
