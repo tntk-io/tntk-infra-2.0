@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="assets/tntk_devops.png" alt="Logo" width="80" height="80">
+    <img src="assets/tntk_devops.png" alt="Logo">
   </a>
 
 <h3 align="center">TNTK Infra 2.0</h3>
@@ -45,8 +45,7 @@ This repo contains the Terraform code for building the tntk-io 2.0 final project
 
 ### Built With
 
-* [![Terraform][terraform-image]][terraform-url]
-
+* <img src="https://static-00.iconduck.com/assets.00/terraform-icon-452x512-ildgg5fd.png" alt="Terraform" width="20" height="20"> [![Terraform][terraform-url]](https://terraform.io)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
