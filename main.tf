@@ -33,8 +33,9 @@ terraform {
 }
 
 provider "argocd" {
-  auth_token                  = data.aws_eks_cluster_auth.cluster_auth.token
-  port_forward_with_namespace = true
+  username                    = "admin"
+  password                    = data.kubernetes_secret.argocd_admin_password.data["password"]
+  port_forward_with_namespace = "argocd"
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)

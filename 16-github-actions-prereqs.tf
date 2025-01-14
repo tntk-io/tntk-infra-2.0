@@ -9,16 +9,16 @@ locals {
 
   # Common variables and secrets that all repositories share
   base_variables = {
-    ACCOUNT_ID                  = var.aws_account_id
-    AWS_REGION                  = var.aws_region
-    BASE_DOMAIN                 = var.base_domain
-    APPLICATION_NAME            = "demoapp"
-    APPLICATION_NAMESPACE       = "application"
-    CD_DESTINATION_OWNER        = var.github_organization
-    CD_PROJECT                  = "final-project-cd"
-    GH_EMAIL                    = var.github_email
-    GH_NAME                     = var.github_name
-    GHA_ECR_ROLE_ARN = aws_iam_role.github_actions_ecr.arn
+    ACCOUNT_ID            = var.aws_account_id
+    AWS_REGION            = var.aws_region
+    BASE_DOMAIN           = var.base_domain
+    APPLICATION_NAME      = "demoapp"
+    APPLICATION_NAMESPACE = "application"
+    CD_DESTINATION_OWNER  = var.github_organization
+    CD_PROJECT            = "final-project-cd"
+    GH_EMAIL              = var.github_email
+    GH_NAME               = var.github_name
+    GHA_ECR_ROLE_ARN      = aws_iam_role.github_actions_ecr.arn
   }
 
   base_secrets = {
@@ -28,8 +28,8 @@ locals {
   # Dynamic variables that are specific to each repository
   # Maps each repository to its corresponding camel case value for YQ_PATH
   dynamic_variables = {
-    for repo in local.repositories : "${var.github_organization}/${repo}" => {
-      repository = "${var.github_organization}/${repo}"
+    for repo in local.repositories : repo => {
+      repository = repo
       name       = "YQ_PATH"
       value      = local.camel_case_variables[repo]
     }
@@ -47,19 +47,17 @@ locals {
   all_variables = merge([
     for repo in local.repositories : {
       for var_name, var_value in local.base_variables : "${repo}/${var_name}" => {
-        repository = "${var.github_organization}/${repo}"
+        repository = repo
         name       = var_name
         value      = var_value
       }
     }
   ]...)
 
-
-
   all_secrets = merge([
     for repo in local.repositories : {
       for secret_name, secret_value in local.base_secrets : "${repo}/${secret_name}" => {
-        repository = "${var.github_organization}/${repo}"
+        repository = repo
         name       = secret_name
         value      = secret_value
       }

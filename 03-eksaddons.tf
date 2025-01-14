@@ -1,7 +1,7 @@
 module "eks_addons" {
   source            = "aws-ia/eks-blueprints-addons/aws"
-  version           = "~> v1.6"
-  cluster_name      = module.eks.cluster_id
+  version           = "~> v1.19"
+  cluster_name      = module.eks.cluster_name
   cluster_endpoint  = module.eks.cluster_endpoint
   cluster_version   = module.eks.cluster_version
   oidc_provider_arn = module.eks.oidc_provider_arn
@@ -26,4 +26,14 @@ module "eks_addons" {
       hosts = ["argo.${var.tags["Environment"]}.${var.base_domain}"]
     }
   }
+
+  # Add empty configurations for required variables
+  aws_for_fluentbit_cw_log_group   = {}
+  aws_node_termination_handler_sqs = {}
+  fargate_fluentbit                = {}
+  fargate_fluentbit_cw_log_group   = {}
+  karpenter_node                   = {}
+  karpenter_sqs                    = {}
+
+  depends_on = [module.eks]
 }

@@ -13,7 +13,8 @@ data "kubernetes_secret" "argocd_admin_password" {
     name      = "argocd-initial-admin-secret"
     namespace = "argocd"
   }
-  depends_on = [module.eks_addons]
+
+  depends_on = [module.eks, module.eks_addons]
 }
 
 data "aws_secretsmanager_secret_version" "rds_password" {

@@ -128,13 +128,13 @@ aws_auth_config = {
   roles = []
   users = [
     {
-      userarn  = "arn:aws:iam::038891198925:user/ernest.ramirez"
+      userarn  = "arn:aws:iam::012345678901:user/ernest.ramirez"
       username = "ernest.ramirez"
       groups   = ["system:masters"]
     }
   ]
   accounts = [
-    "038891198925"
+    "012345678901"
   ]
 }
 

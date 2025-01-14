@@ -3,7 +3,9 @@ resource "null_resource" "trigger_build" {
     github_repository.repos,
     github_actions_secret.secret,
     github_actions_variable.variable,
-    null_resource.repo_clone
+    null_resource.repo_clone,
+    helm_release.gha_actions_runner_controller,
+    helm_release.gha_actions_runner_scale_set
   ]
 
   for_each = {

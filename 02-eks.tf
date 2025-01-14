@@ -4,7 +4,7 @@
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"
+  version = "~> 20.31"
 
   cluster_name                   = var.eks_settings["cluster"]["name"]
   cluster_version                = var.eks_settings["cluster"]["version"]
@@ -19,6 +19,10 @@ module "eks" {
   eks_managed_node_group_defaults = {
     instance_types = var.eks_settings["node_group_defaults"]["instance_types"]
   }
+
+  # Add the managed node groups configuration
+  eks_managed_node_groups = var.eks_settings["managed_node_groups"]
+
   # Cluster access entry
   # To add the current caller identity as an administrator
   enable_cluster_creator_admin_permissions = var.eks_settings["cluster"]["enable_cluster_creator_admin_permissions"]
@@ -66,7 +70,6 @@ resource "aws_iam_policy" "eks_cluster_policy" {
     ]
   })
 }
-
 
 
 

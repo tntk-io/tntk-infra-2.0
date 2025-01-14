@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# This script generates the overrides.auto.tfvars file with the necessary variables to build the Tntk Final Project 2.0 infrastructure
 # Prompt the user for standard variables
 read -p "Enter AWS Region (e.g., us-east-2): " aws_region
 read -p "Enter AWS Account ID: " aws_account_id
