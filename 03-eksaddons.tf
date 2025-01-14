@@ -10,6 +10,7 @@ module "eks_addons" {
   enable_aws_load_balancer_controller = true
   enable_cert_manager                 = true
   enable_external_secrets             = true
+  enable_metrics_server               = true
   enable_argocd                       = true
   argocd = {
     server = {
@@ -26,14 +27,5 @@ module "eks_addons" {
       hosts = ["argo.${var.tags["Environment"]}.${var.base_domain}"]
     }
   }
-
-  # Add empty configurations for required variables
-  aws_for_fluentbit_cw_log_group   = {}
-  aws_node_termination_handler_sqs = {}
-  fargate_fluentbit                = {}
-  fargate_fluentbit_cw_log_group   = {}
-  karpenter_node                   = {}
-  karpenter_sqs                    = {}
-
   depends_on = [module.eks]
 }
