@@ -43,6 +43,11 @@ variable "datadog_application_key" {
   description = "datadog application key"
 }
 
+variable "datadog_enabled" {
+  type        = bool
+  description = "datadog enabled"
+}
+
 variable "datadog_region" {
   type        = string
   description = "datadog region"
