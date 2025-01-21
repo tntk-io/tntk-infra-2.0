@@ -2,7 +2,8 @@
 # ###          DATADOG              ###
 # #####################################
 
-resource "aws_cloudformation_stack" "DatadogIntegration" {
+resource "aws_cloudformation_stack" "datadog_integration" {
+  count = var.datadog_enabled ? 1 : 0
   name         = "DatadogIntegration"
   capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND"]
   parameters = {

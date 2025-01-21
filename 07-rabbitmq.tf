@@ -4,13 +4,13 @@
 
 
 resource "aws_mq_broker" "rabbitmq" {
-  broker_name = "${var.tag_env}-rabbitmq"
+  broker_name = "${var.tags["Environment"]}-rabbitmq"
 
   engine_type                = "RabbitMQ"
   engine_version             = "3.13"
   host_instance_type         = "mq.t3.micro"
   auto_minor_version_upgrade = true
-  security_groups            = [module.security_group.security_group_id]
+  security_groups            = [module.rabbitmq_security_group.security_group_id]
   subnet_ids                 = [module.vpc.private_subnets[0]]
 
   user {
@@ -27,7 +27,7 @@ module "rabbitmq_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
 
-  name   = "${var.tag_env}-rabbitmq"
+  name   = "${var.tags["Environment"]}-rabbitmq"
   vpc_id = module.vpc.vpc_id
 
   # ingress
@@ -41,7 +41,7 @@ module "rabbitmq_security_group" {
   ]
 
   tags = {
-    Name = "${var.tag_env}-rabbitmq"
+    Name = "${var.tags["Environment"]}-rabbitmq"
   }
 }
 
@@ -64,7 +64,7 @@ resource "random_password" "rabbitmq_username" {
 
 # saving rabbitmq password into ssm
 resource "aws_ssm_parameter" "save_rabbitmq_password_to_ssm" {
-  name        = "/${var.tag_env}/rabbitmq/password"
+  name        = "/${var.tags["Environment"]}/rabbitmq/password"
   description = "rabbitmq password"
   type        = "SecureString"
   value       = random_password.rabbitmq_password.result
@@ -72,7 +72,7 @@ resource "aws_ssm_parameter" "save_rabbitmq_password_to_ssm" {
 
 # saving rabbitmq admin_username into ssm
 resource "aws_ssm_parameter" "save_rabbitmq_username_to_ssm" {
-  name        = "/${var.tag_env}/rabbitmq/username"
+  name        = "/${var.tags["Environment"]}/rabbitmq/username"
   description = "rabbitmq username"
   type        = "SecureString"
   value       = random_password.rabbitmq_username.result
@@ -80,7 +80,7 @@ resource "aws_ssm_parameter" "save_rabbitmq_username_to_ssm" {
 
 # saving rabbitmq endpoint into ssm
 resource "aws_ssm_parameter" "save_rabbitmq_endpoint_to_ssm" {
-  name        = "/${var.tag_env}/rabbitmq/endpoint"
+  name        = "/${var.tags["Environment"]}/rabbitmq/endpoint"
   description = "rabbitmq endpoint"
   type        = "SecureString"
   value       = "temphost"

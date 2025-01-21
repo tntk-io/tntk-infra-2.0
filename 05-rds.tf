@@ -5,7 +5,7 @@
 module "rds" {
   source = "terraform-aws-modules/rds/aws"
 
-  identifier = "${var.tag_env}-rds"
+  identifier = "${var.tags["Environment"]}-rds"
 
   # All available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts
   engine               = "postgres"
@@ -26,7 +26,7 @@ module "rds" {
   vpc_security_group_ids = [module.rds_security_group.security_group_id]
 
   tags = {
-    Name = "${var.tag_env}-rds"
+    Name = "${var.tags["Environment"]}-rds"
   }
 
 
@@ -40,7 +40,7 @@ module "rds_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
 
-  name        = "${var.tag_env}-rds"
+  name        = "${var.tags["Environment"]}-rds"
   description = "Complete PostgreSQL example security group"
   vpc_id      = module.vpc.vpc_id
 
@@ -56,7 +56,7 @@ module "rds_security_group" {
   ]
 
   tags = {
-    Name = "${var.tag_env}-rds"
+    Name = "${var.tags["Environment"]}-rds"
   }
 }
 
@@ -85,7 +85,7 @@ resource "random_password" "rds_admin_username" {
 
 # saving rds db_name into ssm
 resource "aws_ssm_parameter" "save_rds_db_name_to_ssm" {
-  name        = "/${var.tag_env}/rds/db_name"
+  name        = "/${var.tags["Environment"]}/rds/db_name"
   description = "RDS DB name"
   type        = "SecureString"
   value       = module.rds.db_instance_name
@@ -93,7 +93,7 @@ resource "aws_ssm_parameter" "save_rds_db_name_to_ssm" {
 
 # saving rds endpoint into ssm
 resource "aws_ssm_parameter" "save_rds_endpoint_to_ssm" {
-  name        = "/${var.tag_env}/rds/endpoint"
+  name        = "/${var.tags["Environment"]}/rds/endpoint"
   description = "RDS endpoint"
   type        = "SecureString"
   value       = module.rds.db_instance_endpoint
@@ -101,19 +101,15 @@ resource "aws_ssm_parameter" "save_rds_endpoint_to_ssm" {
 
 # saving rds password into ssm
 resource "aws_ssm_parameter" "save_rds_password_to_ssm" {
-  name        = "/${var.tag_env}/rds/password"
+  name        = "/${var.tags["Environment"]}/rds/password"
   description = "RDS password"
   type        = "SecureString"
   value       = jsondecode(data.aws_secretsmanager_secret_version.rds_password.secret_string).password
 }
 
-data "aws_secretsmanager_secret_version" "rds_password" {
-  secret_id = module.rds.db_instance_master_user_secret_arn  # Replace with your secret ARN
-}
-
 # saving rds admin_username into ssm
 resource "aws_ssm_parameter" "save_rds_admin_username_to_ssm" {
-  name        = "/${var.tag_env}/rds/username"
+  name        = "/${var.tags["Environment"]}/rds/username"
   description = "RDS username"
   type        = "SecureString"
   value       = random_password.rds_admin_username.result

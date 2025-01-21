@@ -1,0 +1,244 @@
+# Standard variables
+aws_region = "us-east-2"
+aws_account_id = "012345678901"
+base_domain = "dev.ernestdevops.net"
+tag_env = "dev"
+datadog_api_key = "MYAPIKEY"
+datadog_application_key = "MYAPPKEY"
+datadog_region = "us5.datadoghq.com"
+github_email = "ernest@ernestramirez.tech"
+github_name = "ernest.ramirez"
+github_organization = "ernram"
+github_token = "MYGITHUBTOKEN"
+
+# This variable is used to import GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
+argocd_repos = {
+  final-project-cd = {
+    repo_url = "https://github.com/ernram/final-project-cd"
+    name     = "final-project-cd"
+  }
+}
+
+# This variable is used to define ArgoCD applications that will be automatically created in ArgoCD when it comes up
+argocd_apps = {
+  shared-resources = {
+    name      = "shared-resources"
+    namespace = "argocd"
+    labels = {
+      shared = "true"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "default"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-cd"
+      chart           = "charts/dev-resources"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "shared-resources"
+      value_files_path = ["values.yaml"]
+    }
+  }
+  tntk-web-dev = {
+    name      = "tntk-api-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-web"
+      chart           = "charts/tntk-web"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-api"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-orders-dev = {
+    name      = "tntk-web-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-orders"
+      chart           = "charts/tntk-orders"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-web"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-auth-dev = {
+    name      = "tntk-auth-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-auth"
+      chart           = "charts/tntk-auth"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-api"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+  tntk-products-dev = {
+    name      = "tntk-products-dev"
+    namespace = "argocd"
+    labels = {
+      environment = "dev"
+    }
+    destination = {
+      server    = "https://kubernetes.default.svc"
+      namespace = "dev"
+    }
+    source = {
+      repo_url        = "https://github.com/ernram/final-project-products"
+      chart           = "charts/tntk-products"
+      target_revision = "0.0.1"
+    }
+    helm = {
+      release_name     = "tntk-products"
+      value_files_path = ["../../environments/values-dev.yaml"]
+    }
+  }
+}
+
+# This variable is used to provide EKS permissions to additional IAM users or roles
+aws_auth_config = {
+  roles = []
+  users = [
+    {
+      userarn  = "arn:aws:iam::012345678901:user/ernest.ramirez"
+      username = "ernest.ramirez"
+      groups   = ["system:masters"]
+    }
+  ]
+  accounts = [
+    "012345678901"
+  ]
+}
+
+# This variable is used to define the ECR repos we should create
+ecr_repos = {
+  tntk-web = {
+    name         = "tntk-web"
+    count_number = 10
+  }
+  tntk-orders = {
+    name         = "tntk-orders"
+    count_number = 10
+  }
+  tntk-auth = {
+    name         = "tntk-auth"
+    count_number = 10
+  }
+  tntk-products = {
+    name         = "tntk-products"
+    count_number = 10
+  }
+}
+
+# This variable is used to define EKS settings that will be applied to the cluster
+eks_settings = {
+  cluster = {
+    name                                     = "final-project"
+    version                                  = "1.29"
+    cluster_endpoint_public_access           = true
+    enable_cluster_creator_admin_permissions = true
+  }
+  cluster_addons = {
+    eks-pod-identity-agent = {
+      most_recent = true
+    }
+    coredns = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+  node_group_defaults = {
+    instance_types = ["t3a.small"]
+  }
+  managed_node_groups = {
+    tntk_eks_nodes = {
+      min_size       = 2
+      max_size       = 2
+      desired_size   = 2
+      instance_types = ["t3a.medium"]
+      capacity_type  = "SPOT"
+    }
+  }
+}
+
+# Repositories for the project
+repositories = {
+  final-project-auth = {
+    description  = "Auth application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-auth"
+  }
+  final-project-cd = {
+    description  = "Manifests for the final project"
+    visibility   = "public"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-cd-2.0"
+  }
+  final-project-orders = {
+    description  = "Orders application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-orders"
+  }
+  final-project-products = {
+    description  = "Products application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-products"
+  }
+  final-project-web = {
+    description  = "Web application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-web-2.0"
+  }
+}
+
+# Tags to be applied to resources
+tags = {
+  Environment = "dev"
+}
