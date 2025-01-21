@@ -1,0 +1,110 @@
+# Specific settings for each sub-chart
+tntk-web:
+  fullnameOverride: "tntk-web-${ENVIRONMENT}"
+  replicaCount: 1
+  image:
+    repository: "${ECR_REPO_WEB}"
+    pullPolicy: IfNotPresent
+    tag: ""
+  serviceAccount:
+    create: true
+  service:
+    type: ClusterIP
+    port: 80
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  configmapData:
+    PORT: "80"
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hosts:
+      - host: "${TNTK_WEB_INGRESS_HOST}"
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+tntk-orders:
+  fullnameOverride: "tntk-orders-${ENVIRONMENT}"
+  replicaCount: 1
+  image:
+    repository: "${ECR_REPO_ORDERS}"
+    pullPolicy: IfNotPresent
+    tag: ""
+  serviceAccount:
+    create: true
+  service:
+    type: ClusterIP
+    port: 80
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  postgresql:
+    host: postgres
+    port: 5432
+    username: postgres
+    password: postgres
+    database: postgres
+  redis:
+    host: redis
+  rabbitmq:
+    host: rabbitmq
+
+tntk-auth:
+  fullnameOverride: "tntk-auth-${ENVIRONMENT}"
+  replicaCount: 1
+  image:
+    repository: "${ECR_REPO_AUTH}"
+    pullPolicy: IfNotPresent
+    tag: ""
+  serviceAccount:
+    create: true
+  service:
+    type: ClusterIP
+    port: 8002
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+
+tntk-products:
+  fullnameOverride: "tntk-products-${ENVIRONMENT}"
+  replicaCount: 1
+  image:
+    repository: "${ECR_REPO_PRODUCTS}"
+    pullPolicy: IfNotPresent
+    tag: ""
+  serviceAccount:
+    create: true
+  service:
+    type: ClusterIP
+    port: 8000
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}

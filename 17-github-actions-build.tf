@@ -5,7 +5,11 @@ resource "null_resource" "trigger_build" {
     github_actions_variable.variable,
     null_resource.repo_clone,
     helm_release.gha_actions_runner_controller,
-    helm_release.gha_actions_runner_scale_set
+    helm_release.gha_actions_runner_scale_set,
+    aws_iam_role.github_actions_ecr,
+    aws_iam_role_policy_attachment.ssm_read_only_github_actions,
+    aws_iam_role_policy_attachment.finalproject_ecr_read_write,
+    aws_iam_openid_connect_provider.github_actions_oidc_provider
   ]
 
   for_each = {

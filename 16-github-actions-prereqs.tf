@@ -1,12 +1,5 @@
 # This resource creates the GitHub Actions secrets and variables required for our GitHub Actions workflow
 locals {
-  camel_case_variables = {
-    final-project-web      = "tntkWeb"
-    final-project-orders   = "tntkOrders"
-    final-project-products = "tntkBooks"
-    final-project-auth     = "tntkAuth"
-  }
-
   # Common variables and secrets that all repositories share
   base_variables = {
     ACCOUNT_ID            = var.aws_account_id
@@ -14,8 +7,9 @@ locals {
     BASE_DOMAIN           = var.base_domain
     APPLICATION_NAME      = "demoapp"
     APPLICATION_NAMESPACE = "application"
+    ENVIRONMENT           = var.tag_env
     CD_DESTINATION_OWNER  = var.github_organization
-    CD_PROJECT            = "final-project-cd"
+    CD_PROJECT            = "tntk-cd"
     GH_EMAIL              = var.github_email
     GH_NAME               = var.github_name
     GHA_ECR_ROLE_ARN      = aws_iam_role.github_actions_ecr.arn
@@ -25,22 +19,17 @@ locals {
     API_TOKEN_GITHUB = base64encode(var.github_token)
   }
 
-  # Dynamic variables that are specific to each repository
-  # Maps each repository to its corresponding camel case value for YQ_PATH
-  dynamic_variables = {
-    for repo in local.repositories : repo => {
-      repository = repo
-      name       = "YQ_PATH"
-      value      = local.camel_case_variables[repo]
-    }
-  }
+  repo_variables = [
+    "YQ_PATH",
+    "APPLICATION_NAME",
+  ]
 
   # List of repositories
   repositories = [
-    "final-project-web",
-    "final-project-orders",
-    "final-project-products",
-    "final-project-auth"
+    "tntk-web",
+    "tntk-orders",
+    "tntk-products",
+    "tntk-auth"
   ]
 
   # Create flattened maps for variables and secrets
@@ -63,6 +52,21 @@ locals {
       }
     }
   ]...)
+
+  # Dynamic variables that are specific to each repository
+  # Maps each repository to its corresponding camel case value for YQ_PATH
+  dynamic_variables = {
+    for pair in flatten([
+      for repo in local.repositories : [
+        for variable in local.repo_variables : {
+          key        = "${repo}/${variable}"
+          repository = repo
+          name       = variable
+          value      = variable == "APPLICATION_NAME" ? "${var.tag_env}/${repo}" : repo
+        }
+      ]
+    ]) : pair.key => pair
+  }
 }
 
 resource "github_actions_variable" "variable" {
@@ -76,7 +80,10 @@ resource "github_actions_variable" "variable" {
 }
 
 resource "github_actions_variable" "dynamic_variable" {
-  for_each = local.dynamic_variables
+  for_each = {
+    for key, value in local.dynamic_variables : key => value
+    if value.repository != null
+  }
 
   repository    = each.value.repository
   variable_name = each.value.name

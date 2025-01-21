@@ -4,6 +4,19 @@ resource "aws_ssm_parameter" "ssm_argocd_admin_password" {
   value = data.kubernetes_secret.argocd_admin_password.data["password"]
 }
 
+resource "github_repository_file" "values_yaml" {
+  repository = github_repository.repos["tntk-cd"].name
+  file       = "environments/${var.tag_env}/values.yaml"
+  content = templatefile(".devops/helm/tntk-bookapp.yaml", {
+    ENVIRONMENT           = var.tag_env
+    ECR_REPO_WEB          = module.ecr["${var.tag_env}/tntk-web"].repository_url
+    ECR_REPO_ORDERS       = module.ecr["${var.tag_env}/tntk-orders"].repository_url
+    ECR_REPO_AUTH         = module.ecr["${var.tag_env}/tntk-auth"].repository_url
+    ECR_REPO_PRODUCTS     = module.ecr["${var.tag_env}/tntk-products"].repository_url
+    TNTK_WEB_INGRESS_HOST = "tntk-bookapp.${var.base_domain}"
+  })
+}
+
 resource "argocd_repository_credentials" "github" {
   url      = "https://github.com/${var.github_organization}"
   username = "git"
