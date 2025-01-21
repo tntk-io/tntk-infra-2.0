@@ -48,9 +48,9 @@ github_token = "test"
 
 # JSON variables
 argocd_repos = {
-  final-project-cd = {
-    repo_url = "https://github.com/ernram/final-project-cd"
-    name     = "final-project-cd"
+  tntk-cd = {
+    repo_url = "https://github.com/ernram/tntk-cd"
+    name     = "tntk-cd"
   }
 }
 
@@ -66,7 +66,7 @@ argocd_apps = {
       namespace = "default"
     }
     source = {
-      repo_url        = "https://github.com/ernram/final-project-cd"
+      repo_url        = "https://github.com/ernram/tntk-cd"
       chart           = "charts/dev-resources"
       target_revision = "0.0.1"
     }
@@ -175,7 +175,7 @@ aws_auth_config = {
 ```
 
 
-## File Descriptions
+## Terraform File Descriptions
 
 ### .gitignore
 - **Purpose**: 

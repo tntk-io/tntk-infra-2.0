@@ -1,9 +1,9 @@
 locals {
   ecr_repos = [
-    "${var.tags["Environment"]}/books",
-    "${var.tags["Environment"]}/auth",
-    "${var.tags["Environment"]}/ui",
-    "${var.tags["Environment"]}/order"
+    "${var.tags["Environment"]}/tntk-web",
+    "${var.tags["Environment"]}/tntk-orders",
+    "${var.tags["Environment"]}/tntk-auth",
+    "${var.tags["Environment"]}/tntk-products"
   ]
 }
 
@@ -14,6 +14,8 @@ locals {
 module "ecr" {
   source   = "terraform-aws-modules/ecr/aws"
   for_each = toset(local.ecr_repos)
+
+  repository_force_delete = true
 
   repository_name = each.value
 

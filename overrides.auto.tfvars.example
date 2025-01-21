@@ -13,9 +13,9 @@ github_token = "MYGITHUBTOKEN"
 
 # This variable is used to import GitHub Repos into your ArgoCD instance, so we can deploy Helm charts from that repo
 argocd_repos = {
-  final-project-cd = {
-    repo_url = "https://github.com/ernram/final-project-cd"
-    name     = "final-project-cd"
+  tntk-cd = {
+    repo_url = "https://github.com/ernram/tntk-cd"
+    name     = "tntk-cd"
   }
 }
 
@@ -32,7 +32,7 @@ argocd_apps = {
       namespace = "default"
     }
     source = {
-      repo_url        = "https://github.com/ernram/final-project-cd"
+      repo_url        = "https://github.com/ernram/tntk-cd"
       chart           = "charts/dev-resources"
       target_revision = "0.0.1"
     }
@@ -162,7 +162,7 @@ ecr_repos = {
 eks_settings = {
   cluster = {
     name                                     = "final-project"
-    version                                  = "1.29"
+    version                                  = "1.30"
     cluster_endpoint_public_access           = true
     enable_cluster_creator_admin_permissions = true
   }
@@ -196,7 +196,7 @@ eks_settings = {
 
 # Repositories for the project
 repositories = {
-  final-project-auth = {
+  tntk-auth = {
     description  = "Auth application for the final project"
     visibility   = "private"
     has_issues   = false
@@ -204,15 +204,7 @@ repositories = {
     has_wiki     = false
     clone_url    = "https://github.com/tntk-io/tntk-auth"
   }
-  final-project-cd = {
-    description  = "Manifests for the final project"
-    visibility   = "public"
-    has_issues   = false
-    has_projects = false
-    has_wiki     = false
-    clone_url    = "https://github.com/tntk-io/tntk-cd-2.0"
-  }
-  final-project-orders = {
+  tntk-orders = {
     description  = "Orders application for the final project"
     visibility   = "private"
     has_issues   = false
@@ -220,7 +212,23 @@ repositories = {
     has_wiki     = false
     clone_url    = "https://github.com/tntk-io/tntk-orders"
   }
-  final-project-products = {
+  tntk-cd = {
+    description  = "Products application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-cd-2.0"
+  }
+  tntk-orders = {
+    description  = "Orders application for the final project"
+    visibility   = "private"
+    has_issues   = false
+    has_projects = false
+    has_wiki     = false
+    clone_url    = "https://github.com/tntk-io/tntk-orders"
+  }
+  tntk-products = {
     description  = "Products application for the final project"
     visibility   = "private"
     has_issues   = false
@@ -228,7 +236,7 @@ repositories = {
     has_wiki     = false
     clone_url    = "https://github.com/tntk-io/tntk-products"
   }
-  final-project-web = {
+  tntk-web = {
     description  = "Web application for the final project"
     visibility   = "private"
     has_issues   = false

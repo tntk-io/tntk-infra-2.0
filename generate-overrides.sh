@@ -31,9 +31,9 @@ github_token = "$github_token"
 
 # JSON variables
 argocd_repos = {
-  final-project-cd = {
-    repo_url = "https://github.com/${github_organization}/final-project-cd"
-    name     = "final-project-cd"
+  tntk-cd = {
+    repo_url = "https://github.com/${github_organization}/tntk-cd"
+    name     = "tntk-cd"
   }
 }
 
@@ -49,7 +49,7 @@ argocd_apps = {
       namespace = "default"
     }
     source = {
-      repo_url        = "https://github.com/${github_organization}/final-project-cd"
+      repo_url        = "https://github.com/${github_organization}/tntk-cd"
       chart           = "charts/dev-resources"
       target_revision = "0.0.1"
     }

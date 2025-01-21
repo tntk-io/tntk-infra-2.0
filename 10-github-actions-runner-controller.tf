@@ -13,13 +13,15 @@ resource "helm_release" "gha_actions_runner_controller" {
 
 
 resource "helm_release" "gha_actions_runner_scale_set" {
-  name      = "gha-runner-scale-set"
-  chart     = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set"
-  namespace = "actions-runner-system"
+  for_each         = var.repositories
+  name             = "gha-runner-scale-set-${each.key}"
+  chart            = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set"
+  namespace        = "github-actions"
+  create_namespace = "true"
 
   set {
     name  = "githubConfigUrl"
-    value = "https://github.com/${var.github_organization}"
+    value = "https://github.com/${var.github_organization}/${each.key}"
   }
 
   set {

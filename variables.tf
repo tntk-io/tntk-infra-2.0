@@ -18,6 +18,11 @@ variable "github_email" {
   description = "Github email"
 }
 
+variable "gha_token" {
+  type        = string
+  description = "Github Actions token"
+}
+
 variable "github_name" {
   type        = string
   description = "Github name"
