@@ -5,7 +5,6 @@ locals {
     ACCOUNT_ID            = var.aws_account_id
     AWS_REGION            = var.aws_region
     BASE_DOMAIN           = var.base_domain
-    APPLICATION_NAME      = "demoapp"
     APPLICATION_NAMESPACE = "application"
     ENVIRONMENT           = var.tag_env
     CD_DESTINATION_OWNER  = var.github_organization
