@@ -29,5 +29,16 @@ resource "helm_release" "gha_actions_runner_scale_set" {
     name  = "githubConfigSecret.github_token"
     value = var.github_token
   }
+
+  set {
+    name  = "runnerScaleSetName"
+    value = each.key
+  }
+
+  set {
+    name  = "containerMode.type"
+    value = "dind"
+  }
+
   depends_on = [module.eks, helm_release.gha_actions_runner_controller]
 }
