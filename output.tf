@@ -1,7 +1,3 @@
-output "argocd_admin_password" {
-  value = data.kubernetes_secret.argocd_admin_password.data["password"]
-}
-
 output "argocd_url" {
   value = "https://argocd.${var.base_domain}"
 }
