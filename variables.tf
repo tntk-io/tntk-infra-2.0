@@ -28,6 +28,12 @@ variable "github_organization" {
   description = "Github Organization"
 }
 
+variable "github_self_hosted_runners_enabled" {
+  default     = false
+  type        = bool
+  description = "Enable self-hosted runners"
+}
+
 variable "tag_env" {
   default     = "prod"
   description = "tag environment for out all resources"
