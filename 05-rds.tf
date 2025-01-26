@@ -1,3 +1,7 @@
+locals {
+  postgres_connection_string = "postgresql://${random_password.rds_admin_username.result}:${random_password.rds_password.result}@${module.rds.db_instance_endpoint}/${random_password.rds_db_name.result}"
+}
+
 #####################################
 ### RDS MODULE
 #####################################
@@ -81,6 +85,13 @@ resource "random_password" "rds_admin_username" {
   length  = 7
   special = false
   numeric = false
+}
+
+resource "aws_ssm_parameter" "save_postgres_connection_string_to_ssm" {
+  name        = "/${var.tags["Environment"]}/rds/connection_string"
+  description = "RDS connection string"
+  type        = "SecureString"
+  value       = local.postgres_connection_string
 }
 
 # saving rds db_name into ssm
