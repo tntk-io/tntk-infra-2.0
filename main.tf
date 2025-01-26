@@ -3,11 +3,11 @@ terraform {
   required_providers {
     argocd = {
       source  = "argoproj-labs/argocd"
-      version = "7.2.0"
+      version = "~> 7.2"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = "5.82.2"
+      version = "~> 5.84"
     }
     github = {
       source  = "integrations/github"
@@ -15,7 +15,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "2.14.1"
+      version = "~> 2.14"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
@@ -23,11 +23,11 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "2.31.0"
+      version = "~> 2.31"
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.6.2"
+      version = "~> 3.6"
     }
   }
 }
@@ -48,7 +48,7 @@ provider "aws" {
   default_tags {
     tags = {
       Team        = "Tentek DevOps"
-      Project     = "DemoApp"
+      Project     = "Final Project 2.0"
       Environment = "${var.tags["Environment"]}"
       ManagedBy   = "Terraform"
     }
