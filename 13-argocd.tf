@@ -8,15 +8,19 @@ resource "github_repository_file" "values_yaml" {
   repository = github_repository.repos["tntk-cd"].name
   file       = "environments/${var.tag_env}/values.yaml"
   content = templatefile(".devops/helm/tntk-bookapp.yaml", {
-    ARGOCD_INGRESS_HOST   = "argocd.${var.base_domain}"
     ENVIRONMENT           = var.tag_env
     ECR_REPO_WEB          = module.ecr["${var.tag_env}/tntk-web"].repository_url
     ECR_REPO_ORDERS       = module.ecr["${var.tag_env}/tntk-orders"].repository_url
     ECR_REPO_AUTH         = module.ecr["${var.tag_env}/tntk-auth"].repository_url
     ECR_REPO_PRODUCTS     = module.ecr["${var.tag_env}/tntk-products"].repository_url
-    REGION                = var.aws_region
     TNTK_WEB_INGRESS_HOST = "tntk-bookapp.${var.base_domain}"
   })
+
+  lifecycle {
+    ignore_changes = [
+      content,
+    ]
+  }
 }
 
 resource "argocd_repository_credentials" "github" {
