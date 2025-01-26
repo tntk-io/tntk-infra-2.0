@@ -15,7 +15,7 @@ locals {
   }
 
   base_secrets = {
-    API_TOKEN_GITHUB = base64encode(var.github_token)
+    API_TOKEN_GITHUB = var.github_token
   }
 
   repo_variables = [
@@ -96,7 +96,7 @@ resource "github_actions_secret" "secret" {
 
   repository      = each.value.repository
   secret_name     = each.value.name
-  encrypted_value = each.value.value
+  plaintext_value = each.value.value
 
   depends_on = [github_repository.repos]
 }
