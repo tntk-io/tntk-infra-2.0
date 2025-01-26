@@ -108,3 +108,36 @@ tntk-products:
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
+
+shared-resources:
+  fullnameOverride: "shared-resources-${ENVIRONMENT}"
+  replicaCount: 1
+  aws:
+    region: ${REGION}
+  global:
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    service:
+      port: 80
+  ingress:
+    enabled: true
+    className: "alb"
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{\"HTTP\": 80}, {\"HTTPS\": 443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: 443   
+    tls: []
+    # Ingress hosts configuration
+    hosts:
+      - host: "${ARGOCD_INGRESS_HOST}"
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
