@@ -23,6 +23,15 @@ module "rds" {
   db_name  = random_password.rds_db_name.result
   username = random_password.rds_admin_username.result
   password = random_password.rds_password.result
+  manage_master_user_password	= false
+
+  parameters = [
+    {
+      name = "rds.force_ssl"
+      value = "0"
+    }
+  ]
+
   port     = 5432
 
 
@@ -92,6 +101,7 @@ resource "aws_ssm_parameter" "save_postgres_connection_string_to_ssm" {
   description = "RDS connection string"
   type        = "SecureString"
   value       = local.postgres_connection_string
+  overwrite   = true
 }
 
 # saving rds db_name into ssm
@@ -100,6 +110,7 @@ resource "aws_ssm_parameter" "save_rds_db_name_to_ssm" {
   description = "RDS DB name"
   type        = "SecureString"
   value       = module.rds.db_instance_name
+  overwrite   = true
 }
 
 # saving rds endpoint into ssm
@@ -108,6 +119,7 @@ resource "aws_ssm_parameter" "save_rds_endpoint_to_ssm" {
   description = "RDS endpoint"
   type        = "SecureString"
   value       = module.rds.db_instance_endpoint
+  overwrite   = true
 }
 
 # saving rds password into ssm
@@ -115,7 +127,8 @@ resource "aws_ssm_parameter" "save_rds_password_to_ssm" {
   name        = "/${var.tags["Environment"]}/rds/password"
   description = "RDS password"
   type        = "SecureString"
-  value       = jsondecode(data.aws_secretsmanager_secret_version.rds_password.secret_string).password
+  value       = random_password.rds_password.result
+  overwrite   = true
 }
 
 # saving rds admin_username into ssm
@@ -124,4 +137,5 @@ resource "aws_ssm_parameter" "save_rds_admin_username_to_ssm" {
   description = "RDS username"
   type        = "SecureString"
   value       = random_password.rds_admin_username.result
+  overwrite   = true
 }

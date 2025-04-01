@@ -8,6 +8,8 @@ module "eks_addons" {
 
   # EKS Add-ons
   enable_aws_load_balancer_controller = true
+  enable_cert_manager                 = false
+  enable_external_secrets             = false
   enable_metrics_server               = true
   enable_argocd                       = true
   argocd = {

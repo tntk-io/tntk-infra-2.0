@@ -83,5 +83,5 @@ resource "aws_ssm_parameter" "save_rabbitmq_endpoint_to_ssm" {
   name        = "/${var.tags["Environment"]}/rabbitmq/endpoint"
   description = "rabbitmq endpoint"
   type        = "SecureString"
-  value       = "temphost"
+  value       = "${aws_mq_broker.rabbitmq.instances[0].endpoints[0]}"
 }
