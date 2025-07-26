@@ -14,6 +14,8 @@ resource "github_repository_file" "values_yaml" {
     ECR_REPO_AUTH         = module.ecr["${var.tag_env}/tntk-auth"].repository_url
     ECR_REPO_PRODUCTS     = module.ecr["${var.tag_env}/tntk-products"].repository_url
     TNTK_WEB_INGRESS_HOST = "tntk-bookapp.${var.base_domain}"
+    ARGOCD_INGRESS_HOST   = "argocd.${var.base_domain}"
+    REGION                = var.aws_region
   })
 
   lifecycle {
