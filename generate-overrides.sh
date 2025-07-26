@@ -144,10 +144,10 @@ eks_settings = {
   # EKS node groups that will be created by Terraform
   managed_node_groups = {
     tntk_eks_nodes = {
-      min_size       = 2
-      max_size       = 2
-      desired_size   = 2
-      instance_types = ["t3a.small"]
+      min_size       = 3
+      max_size       = 3
+      desired_size   = 3
+      instance_types = ["t3a.medium"]
       capacity_type  = "SPOT"
     }
   }
