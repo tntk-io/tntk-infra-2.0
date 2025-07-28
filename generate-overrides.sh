@@ -40,26 +40,6 @@ argocd_repos = {
 }
 # ArgoCD Applications that will be created by Terraform in ArgoCD
 argocd_apps = {
-  shared-resources = {
-    name      = "shared-resources"
-    namespace = "argocd"
-    labels = {
-      shared = "true"
-    }
-    destination = {
-      server    = "https://kubernetes.default.svc"
-      namespace = "default"
-    }
-    source = {
-      repo_url        = "https://github.com/${github_organization}/tntk-cd"
-      chart           = "charts/shared-resources"
-      target_revision = "0.0.1"
-    }
-    helm = {
-      release_name     = "shared-resources"
-      value_files_path = ["values.yaml"]
-    }
-  }
   tntk-bookapp = {
     name      = "tntk-bookapp"
     namespace = "argocd"
