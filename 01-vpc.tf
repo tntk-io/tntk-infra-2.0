@@ -22,12 +22,12 @@ module "vpc" {
   public_subnet_tags = {
     "Name"                                                 = "${var.tags["Environment"]}-Public-Subnet",
     "kubernetes.io/role/elb"                               = 1,
-    "kubernetes.io/cluster/eks-${var.tags["Environment"]}" = "owned"
+    "kubernetes.io/cluster/${var.eks_settings["cluster"]["name"]}" = "owned"
   }
   private_subnet_tags = {
     "Name"                                                 = "${var.tags["Environment"]}-Private-Subnet",
     "kubernetes.io/role/internal-elb"                      = 1,
-    "kubernetes.io/cluster/eks-${var.tags["Environment"]}" = "owned"
+    "kubernetes.io/cluster/${var.eks_settings["cluster"]["name"]}" = "owned"
   }
 
 }

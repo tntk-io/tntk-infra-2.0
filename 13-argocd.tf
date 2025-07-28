@@ -16,13 +16,9 @@ resource "github_repository_file" "values_yaml" {
     TNTK_WEB_INGRESS_HOST = "tntk-bookapp.${var.base_domain}"
     ARGOCD_INGRESS_HOST   = "argocd.${var.base_domain}"
     REGION                = var.aws_region
+    ACM_CERTIFICATE_ARN   = module.acm.acm_certificate_arn
   })
-
-  lifecycle {
-    ignore_changes = [
-      content,
-    ]
-  }
+  depends_on = [github_repository.repos["tntk-cd"]]
 }
 
 resource "argocd_repository_credentials" "github" {

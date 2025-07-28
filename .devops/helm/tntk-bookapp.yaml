@@ -24,8 +24,14 @@ tntk-web:
     PORT: "80"
   ingress:
     enabled: true
-    className: ""
-    annotations: {}
+    className: "alb"
+    annotations:
+      alb.ingress.kubernetes.io/load-balancer-name: "tntk-bookstore"
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{\"HTTP\": 80}, {\"HTTPS\": 443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: 443
+      alb.ingress.kubernetes.io/ssl-certificate-arn: "${ACM_CERTIFICATE_ARN}"
     hosts:
       - host: "${TNTK_WEB_INGRESS_HOST}"
         paths:

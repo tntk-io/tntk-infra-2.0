@@ -9,7 +9,7 @@ resource "null_resource" "repo_clone" {
     repo_id = github_repository.repos[each.key].id
   }
 
-  depends_on = [github_repository.repos, module.ecr, aws_iam_role.github_actions_ecr, github_actions_secret.secret, github_actions_variable.dynamic_variable, github_actions_variable.variable]
+  depends_on = [github_repository.repos, module.ecr, aws_iam_role.github_actions_ecr, github_actions_secret.secret, github_actions_variable.dynamic_variable, github_actions_variable.variable, github_repository_file.values_yaml]
 
   provisioner "local-exec" {
     command = <<-EOT
