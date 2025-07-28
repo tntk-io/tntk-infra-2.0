@@ -36,7 +36,7 @@ tntk-web:
       - host: "${TNTK_WEB_INGRESS_HOST}"
         paths:
           - path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
     tls: []
 
 tntk-orders:

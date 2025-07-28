@@ -20,19 +20,19 @@ module "rds" {
 
   allocated_storage = 10
 
-  db_name  = random_password.rds_db_name.result
-  username = random_password.rds_admin_username.result
-  password = random_password.rds_password.result
-  manage_master_user_password	= false
+  db_name                     = random_password.rds_db_name.result
+  username                    = random_password.rds_admin_username.result
+  password                    = random_password.rds_password.result
+  manage_master_user_password = false
 
   parameters = [
     {
-      name = "rds.force_ssl"
+      name  = "rds.force_ssl"
       value = "0"
     }
   ]
 
-  port     = 5432
+  port = 5432
 
 
   db_subnet_group_name   = module.vpc.database_subnet_group

@@ -20,13 +20,13 @@ module "vpc" {
   private_route_table_tags = { "Name" = "${var.tags["Environment"]}-Private-Route-Table" }
   public_route_table_tags  = { "Name" = "${var.tags["Environment"]}-Public-Route-Table" }
   public_subnet_tags = {
-    "Name"                                                 = "${var.tags["Environment"]}-Public-Subnet",
-    "kubernetes.io/role/elb"                               = 1,
+    "Name"                                                         = "${var.tags["Environment"]}-Public-Subnet",
+    "kubernetes.io/role/elb"                                       = 1,
     "kubernetes.io/cluster/${var.eks_settings["cluster"]["name"]}" = "owned"
   }
   private_subnet_tags = {
-    "Name"                                                 = "${var.tags["Environment"]}-Private-Subnet",
-    "kubernetes.io/role/internal-elb"                      = 1,
+    "Name"                                                         = "${var.tags["Environment"]}-Private-Subnet",
+    "kubernetes.io/role/internal-elb"                              = 1,
     "kubernetes.io/cluster/${var.eks_settings["cluster"]["name"]}" = "owned"
   }
 

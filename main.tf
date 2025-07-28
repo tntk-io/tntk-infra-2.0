@@ -9,6 +9,9 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.84"
     }
+    datadog = {
+      source = "DataDog/datadog"
+    }
     github = {
       source  = "integrations/github"
       version = "~> 6.0"
@@ -53,6 +56,12 @@ provider "aws" {
       ManagedBy   = "Terraform"
     }
   }
+}
+
+provider "datadog" {
+  api_key = var.datadog_api_key
+  app_key = var.datadog_application_key
+  api_url = "https://${var.datadog_region}/api/"
 }
 
 provider "github" {

@@ -39,15 +39,28 @@ resource "null_resource" "delay_between_addons" {
 }
 
 module "additional_addons" {
-  source            = "aws-ia/eks-blueprints-addons/aws"
-  version           = "~> v1.19"
-  cluster_name      = module.eks.cluster_name
-  cluster_endpoint  = module.eks.cluster_endpoint
-  cluster_version   = module.eks.cluster_version
-  oidc_provider_arn = module.eks.oidc_provider_arn
+  source                  = "aws-ia/eks-blueprints-addons/aws"
+  version                 = "~> v1.19"
+  cluster_name            = module.eks.cluster_name
+  cluster_endpoint        = module.eks.cluster_endpoint
+  cluster_version         = module.eks.cluster_version
+  oidc_provider_arn       = module.eks.oidc_provider_arn
   enable_external_secrets = true
   external_secrets = {
     create_role = true
   }
-  depends_on              = [module.eks, null_resource.delay_between_addons, aws_iam_role.external_secrets_role]
+  enable_external_dns = true
+  # external_dns = {
+  #   values = [
+  #     "provider=aws",
+  #     "policy=upsert-only",
+  #     "registry=txt",
+  #     "domainFilter=${var.base_domain}",
+  #     "txtOwnerId=${data.aws_caller_identity.current.account_id}",
+  #     "sources=service,ingress",
+  #     "awsZoneType=public"
+  #   ]
+  # }
+  external_dns_route53_zone_arns = [data.aws_route53_zone.base_domain.arn]
+  depends_on                     = [module.eks, null_resource.delay_between_addons, aws_iam_role.external_secrets_role]
 }

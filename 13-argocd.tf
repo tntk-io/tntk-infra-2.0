@@ -63,8 +63,6 @@ resource "argocd_application" "argocd_application" {
         value_files = each.value["helm"]["value_files_path"]
       }
     }
-
-
     sync_policy {
       automated {
         prune     = true
