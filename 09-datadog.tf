@@ -58,3 +58,55 @@ resource "datadog_integration_aws_account" "datadog_integration" {
     }
   }
 }
+
+# Install Datadog Agent using Helm
+resource "helm_release" "datadog" {
+  name             = "datadog"
+  repository       = "https://helm.datadoghq.com"
+  chart            = "datadog"
+  version          = "3.53.2"
+  namespace        = "datadog"
+  create_namespace = true
+  timeout          = 300
+
+  set {
+    name  = "datadog.apiKey"
+    value = var.datadog_api_key
+  }
+
+  set {
+    name  = "datadog.appKey"
+    value = var.datadog_application_key
+  }
+
+  set {
+    name  = "datadog.site"
+    value = var.datadog_region
+  }
+
+  set {
+    name  = "datadog.clusterName"
+    value = var.eks_settings["cluster"]["name"]
+  }
+
+  set {
+    name  = "datadog.dd_url"
+    value = "https://${var.datadog_region}"
+  }
+
+  # Enable logs collection
+  set {
+    name  = "datadog.logs.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "datadog.logs.containerCollectAll"
+    value = "true"
+  }
+
+  depends_on = [
+    module.eks
+  ]
+}
+

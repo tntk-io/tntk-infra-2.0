@@ -19,6 +19,11 @@ resource "github_repository_file" "values_yaml" {
     ACM_CERTIFICATE_ARN   = module.acm.acm_certificate_arn
   })
   depends_on = [github_repository.repos["tntk-cd"]]
+  lifecycle {
+    ignore_changes = [
+      content,
+    ]
+  }
 }
 
 resource "argocd_repository_credentials" "github" {
